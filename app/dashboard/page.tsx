@@ -1,9 +1,10 @@
 import React from 'react'
 
-const page = () => {
+export default function DashboardPage() {
     return (
-        <div>Dashboard</div>
-    )
+        <div>
+            <h1>Dashboard</h1>
+            {/* Add your dashboard content here */}
+        </div>
+    );
 }
-
-export default page

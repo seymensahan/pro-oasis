@@ -31,6 +31,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LogoutButton } from "@/components/LogoutButton";
 
 interface AdminLayoutProps {
     children: React.ReactNode;
@@ -60,6 +61,20 @@ const sidebarData = [
         ],
     },
     {
+        title: "Store",
+        items: [
+            { icon: Package, label: "Manage Stock", href: "/dashboard/stock" },
+            { icon: Box, label: "Stock Adjustment", href: "/dashboard/stock-ajustment" },
+        ],
+    },
+    {
+        title: "Sales",
+        items: [
+            { icon: Package, label: "Sales", href: "/dashboard/sales" },
+            { icon: Box, label: "Invoice", href: "/dashboard/invoice" },
+        ],
+    },
+    {
         title: null,
         items: [
             {
@@ -72,7 +87,7 @@ const sidebarData = [
     },
 ];
 
-export default function layout({ children }: AdminLayoutProps) {
+export default function DashboardLayout({ children }: AdminLayoutProps) {
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
     return (
@@ -195,9 +210,8 @@ export default function layout({ children }: AdminLayoutProps) {
                                             <Settings className="mr-2 h-4 w-4" />
                                             <span>Settings</span>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <LogOut className="mr-2 h-4 w-4" />
-                                            <span>Log out</span>
+                                        <DropdownMenuItem asChild>
+                                            <LogoutButton />
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>

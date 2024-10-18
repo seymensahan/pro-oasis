@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BarChart3, DollarSign, FileText, LineChart, Package, PieChart } from "lucide-react";
 import Link from "next/link";
 
+
 // Type definitions for props
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -25,7 +26,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <PieChart className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-800">FinStock Manager</span>
+            <span className="text-2xl font-bold text-gray-800">Pro Oasis</span>
           </div>
           <nav>
             <ul className="flex space-x-4">
