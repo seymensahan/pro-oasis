@@ -157,7 +157,7 @@ export default function page() {
             </div>
 
             {/* Product Table */}
-            <div className="bg-white shadow-md p-10 rounded-lg overflow-hidden">
+            <div className="bg-white shadow-md p-5 rounded-lg overflow-hidden">
                 <Table className="">
                     <TableHeader >
                         <TableRow>
