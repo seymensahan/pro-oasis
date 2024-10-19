@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/useLogout";
 
 export function LogoutButton() {
-    const { logout } = useAuth();
+    const { logout } = useLogout();
 
     return (
         <Button variant="ghost" onClick={logout} className="w-full justify-start">
