@@ -1,4 +1,4 @@
-import { BarChart2, Box, Briefcase, FileText, Layers, LayoutDashboard, Package, ShoppingCart, Tag } from 'lucide-react'
+import { BarChart2, Box, Briefcase, FileText, Layers, LayoutDashboard, Package, PieChart, ShoppingCart, Tag } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -57,13 +57,13 @@ const Sidebar = () => {
         <aside className="w-64 bg-white shadow-md overflow-y-auto">
             <div className="p-4">
                 <Link href="/" className="flex items-center space-x-2">
-                    <ShoppingCart className="h-8 w-8 text-orange-500" />
+                    <PieChart className="h-8 w-8 text-blue-600" />
                     <span className="text-2xl font-bold">Pro Oasis</span>
                 </Link>
             </div>
             <nav className="mt-8">
                 {sidebarData.map((section, index) => (
-                    <div key={index}>
+                    <div key={index} className="mb-4">
                         {section.title && (
                             <div className="px-4 py-2 text-gray-500 uppercase text-xs font-semibold">
                                 {section.title}
@@ -73,7 +73,7 @@ const Sidebar = () => {
                             <Link
                                 key={itemIndex}
                                 href={item.href}
-                                className="flex items-center justify-between px-6 py-3 text-gray-600 hover:bg-orange-50 hover:text-orange-500"
+                                className="flex items-center justify-between px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-500 hover:rounded-lg transition-all duration-200"
                             >
                                 <div className="flex items-center space-x-2 text-sm">
                                     <item.icon className="h-5 w-5" />

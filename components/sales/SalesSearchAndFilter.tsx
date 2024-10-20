@@ -16,10 +16,24 @@ const SalesSearchAndFilter: React.FC<SalesSearchAndFilterProps> = ({ setSearchTe
                 className="pl-10 pr-4 py-2 w-64 rounded-md border border-gray-300"
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <svg
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+            </svg>
         </div>
         <div className="flex items-center space-x-2">
             <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4 text-orange-500" />
+                <Filter className="h-4 w-4 text-blue-500" />
             </Button>
             <Button variant="outline">
                 Newest

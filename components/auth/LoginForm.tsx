@@ -20,7 +20,7 @@ export function LoginForm() {
 
     return (
         <form onSubmit={handleLogin} className="space-y-4">
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && <p className="text-red-500 text-sm">{error.message}</p>}
             <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
                 <div className="relative">

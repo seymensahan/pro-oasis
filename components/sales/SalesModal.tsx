@@ -26,15 +26,22 @@ import {
 import { CalendarIcon, X } from "lucide-react"
 import { format } from "date-fns"
 
-export default function AddSalesModal() {
+interface SalesModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
     const [date, setDate] = React.useState<Date>()
 
+    if (!isOpen) return null;
+
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg w-[800px] max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center p-4 border-b">
                     <h2 className="text-xl font-semibold">Add Sales</h2>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" onClick={onClose}>
                         <X className="h-4 w-4" />
                     </Button>
                 </div>
@@ -179,7 +186,7 @@ export default function AddSalesModal() {
                     </div>
                 </div>
                 <div className="flex justify-end space-x-2 p-4 border-t">
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline" onClick={onClose}>Cancel</Button>
                     <Button className="bg-orange-500 hover:bg-orange-600">Submit</Button>
                 </div>
             </div>

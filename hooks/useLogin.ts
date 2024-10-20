@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
 
@@ -16,8 +16,15 @@ export function useLogin() {
         loading,
         error
     ] = useSignInWithEmailAndPassword(auth);
+    const [authUser, authLoading] = useAuthState(auth);
 
-    
+    useEffect(() => {
+        if (authUser || user) {
+            router.push('/dashboard');
+        }
+    }, [authUser, user, router]);
+
+
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();

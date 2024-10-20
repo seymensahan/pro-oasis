@@ -51,24 +51,51 @@ const salesData: Sale[] = [
 const SalesList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [searchTerm, setSearchTerm] = useState<string>("")
+    const [sortField, setSortField] = useState<keyof Sale>("date")
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
     const itemsPerPage = 10
 
-    // Filtering logic based on search term
-    const filteredData = salesData.filter(sale =>
-        sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        sale.reference.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    // Filtering and sorting logic
+    const filteredAndSortedData = salesData
+        .filter(sale =>
+            sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            sale.reference.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .sort((a, b) => {
+            if (a[sortField] < b[sortField]) return sortDirection === "asc" ? -1 : 1;
+            if (a[sortField] > b[sortField]) return sortDirection === "asc" ? 1 : -1;
+            return 0;
+        });
 
     const indexOfLastItem = currentPage * itemsPerPage
     const indexOfFirstItem = indexOfLastItem - itemsPerPage
-    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem)
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+    const currentItems = filteredAndSortedData.slice(indexOfFirstItem, indexOfLastItem)
+    const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage)
+
+    const handleSort = (field: keyof Sale) => {
+        if (field === sortField) {
+            setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+        } else {
+            setSortField(field);
+            setSortDirection("asc");
+        }
+    };
 
     return (
         <div className="container mx-auto p-6">
             <SalesHeader />
-            <SalesSearchAndFilter setSearchTerm={setSearchTerm} />
-            <SalesTable salesData={currentItems} />
+            <SalesSearchAndFilter 
+                setSearchTerm={setSearchTerm}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+            />
+            <SalesTable 
+                salesData={currentItems}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+            />
             <SalesPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
