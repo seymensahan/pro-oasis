@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3, DollarSign, FileText, LineChart, Package, PieChart } from "lucide-react";
 import Link from "next/link";
+import HomeHeader from "@/components/HomeHeader";
 
 
 // Type definitions for props
@@ -19,28 +20,12 @@ interface PricingCardProps {
   highlighted?: boolean;
 }
 
+
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <PieChart className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-800">Pro Oasis</span>
-          </div>
-          <nav>
-            <ul className="flex space-x-4">
-              <li><Link href="#features" className="text-gray-600 hover:text-blue-600">Features</Link></li>
-              <li><Link href="#pricing" className="text-gray-600 hover:text-blue-600">Pricing</Link></li>
-              <li><Link href="#contact" className="text-gray-600 hover:text-blue-600">Contact</Link></li>
-            </ul>
-          </nav>
-          <div>
-            <Button variant="outline" className="mr-2">Log In</Button>
-            <Button>Sign Up</Button>
-          </div>
-        </div>
-      </header>
+      <HomeHeader />
 
       <main className="container mx-auto px-4 py-16">
         <section className="text-center mb-16">
@@ -50,7 +35,9 @@ export default function Home() {
           <p className="text-xl text-gray-600 mb-8">
             Streamline your business operations with our all-in-one management solution
           </p>
-          <Button size="lg" className="text-lg px-8 py-4">Get Started for Free</Button>
+          <Link href="/login">
+            <Button size="lg" className="text-lg px-8 py-4">Get Started for Free</Button>
+          </Link>
         </section>
 
         <section id="features" className="mb-16">
