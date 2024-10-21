@@ -3,11 +3,20 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Filter, ChevronDown } from 'lucide-react'
 
+// Update the interface to include the new props
 interface SalesSearchAndFilterProps {
     setSearchTerm: (term: string) => void
+    sortField: string
+    sortDirection: "asc" | "desc"
+    onSort: (field: string) => void
 }
 
-const SalesSearchAndFilter: React.FC<SalesSearchAndFilterProps> = ({ setSearchTerm }) => (
+const SalesSearchAndFilter: React.FC<SalesSearchAndFilterProps> = ({ 
+    setSearchTerm, 
+    sortField, 
+    sortDirection, 
+    onSort 
+}) => (
     <div className="flex justify-between items-center mb-4">
         <div className="relative">
             <Input
@@ -35,9 +44,9 @@ const SalesSearchAndFilter: React.FC<SalesSearchAndFilterProps> = ({ setSearchTe
             <Button variant="outline" size="icon">
                 <Filter className="h-4 w-4 text-blue-500" />
             </Button>
-            <Button variant="outline">
-                Newest
-                <ChevronDown className="ml-2 h-4 w-4" />
+            <Button variant="outline" onClick={() => onSort(sortField)}>
+                {sortField.charAt(0).toUpperCase() + sortField.slice(1)}
+                <ChevronDown className={`ml-2 h-4 w-4 ${sortDirection === 'desc' ? 'rotate-180' : ''}`} />
             </Button>
         </div>
     </div>
