@@ -68,7 +68,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                         <TableCell>{product.sku}</TableCell>
                         <TableCell>{product.category}</TableCell>
                         <TableCell>{product.brand}</TableCell>
-                        <TableCell>${product.price.toFixed(2)}</TableCell>
+                        <TableCell>{product.price.toFixed(2)} FCFA</TableCell>
                         <TableCell>{product.unit}</TableCell>
                         <TableCell>{product.qty}</TableCell>
                         <TableCell>

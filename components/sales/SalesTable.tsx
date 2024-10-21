@@ -115,9 +115,9 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                         {sale.status}
                                     </span>
                                 </TableCell>
-                                <TableCell>${sale.grandTotal.toFixed(2)}</TableCell>
-                                <TableCell>${sale.paid.toFixed(2)}</TableCell>
-                                <TableCell>${sale.due.toFixed(2)}</TableCell>
+                                <TableCell>{sale.grandTotal.toFixed(2)} FCFA</TableCell>
+                                <TableCell>{sale.paid.toFixed(2)} FCFA</TableCell>
+                                <TableCell>{sale.due.toFixed(2)} FCFA</TableCell>
                                 <TableCell>
                                     <span
                                         className={`px-2 py-1 rounded-full text-xs ${

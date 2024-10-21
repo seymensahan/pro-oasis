@@ -28,7 +28,7 @@ export default function LoginPage() {
             <div className="w-full lg:w-1/2 bg-gray-100">
                 <div className="h-full w-full relative">
                     <Image
-                        src="/placeholder.svg?height=1080&width=1920" 
+                        src="/login-image.jpg" 
                         alt="Stock management system"
                         layout="fill"
                         objectFit="cover"

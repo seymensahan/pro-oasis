@@ -26,7 +26,7 @@ export default function RegisterPage() {
             <div className="w-full lg:w-1/2 bg-gray-100">
                 <div className="h-full w-full relative">
                     <Image
-                        src="/register_banner.jpg"
+                        src="/register-image.jpg"
                         alt="Stock management system"
                         layout="fill"
                         objectFit="cover"
