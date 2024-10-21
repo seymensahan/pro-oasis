@@ -86,15 +86,15 @@ const SalesList: React.FC = () => {
             <SalesHeader />
             <SalesSearchAndFilter 
                 setSearchTerm={setSearchTerm}
-                sortField={sortField}
+                sortField={sortField as string}
                 sortDirection={sortDirection}
-                onSort={handleSort}
+                onSort={(field: string) => handleSort(field as keyof Sale)}
             />
             <SalesTable 
                 salesData={currentItems}
-                sortField={sortField}
+                sortField={sortField as string}
                 sortDirection={sortDirection}
-                onSort={handleSort}
+                onSort={(field: string) => handleSort(field as keyof Sale)}
             />
             <SalesPagination
                 currentPage={currentPage}

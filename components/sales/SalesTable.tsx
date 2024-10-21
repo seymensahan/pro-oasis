@@ -4,7 +4,7 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
-import { MoreVertical } from 'lucide-react'
+import { ArrowDownUp, MoreVertical } from 'lucide-react'
 
 // Define the type for the sales data items
 interface Sale {
@@ -22,9 +22,12 @@ interface Sale {
 
 interface SalesTableProps {
     salesData: Sale[]  // List of current sales data (after filtering & pagination)
+    sortField: string
+    sortDirection: "asc" | "desc"
+    onSort: (field: string) => void
 }
 
-const SalesTable: React.FC<SalesTableProps> = ({ salesData }) => {
+const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirection, onSort }) => {
     return (
         <div className="bg-white p-5 shadow-md rounded-lg overflow-hidden">
             <Table>
@@ -33,15 +36,61 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData }) => {
                         <TableHead className="w-12">
                             <Checkbox />
                         </TableHead>
-                        <TableHead>Customer Name</TableHead>
-                        <TableHead>Reference</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Grand Total</TableHead>
-                        <TableHead>Paid</TableHead>
-                        <TableHead>Due</TableHead>
-                        <TableHead>Payment Status</TableHead>
-                        <TableHead>Biller</TableHead>
+                        {/* Add onClick handlers to make columns sortable */}
+                        <TableHead onClick={() => onSort("customerName")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Customer Name</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("reference")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Reference</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("date")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Date</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("status")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Status</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("grandTotal")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Grand Total</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("paid")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Paid</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("due")} className="cursor-pointer">
+                            <div className="flex items-center justify-between ">
+                                <span>Due</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("paymentStatus")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Payment Status</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead onClick={() => onSort("biller")} className="cursor-pointer">
+                            <div className="flex items-center justify-between">
+                                <span>Biller</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
