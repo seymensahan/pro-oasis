@@ -10,3 +10,6 @@ export type OptionsSelect = {
   value: string;
   id: string;
 };
+
+export const ERROR_MESSAGE =
+  "une erreur s'est produite lors du traitement de votre requête";
