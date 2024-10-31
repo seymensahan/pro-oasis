@@ -1,14 +1,6 @@
-import React, { useState } from 'react'
+// SalesModal.tsx
+import React, { useState, useCallback } from 'react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import {
     Table,
     TableBody,
@@ -17,30 +9,88 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Calendar } from "@/components/ui/calendar"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { CalendarIcon, PlusCircle, X } from "lucide-react"
-import { format } from "date-fns"
-import useProducts from '@/app/dashboard/sales/hooks/useProducts'
+import SalesForm from './SalesForm'
+import { X } from 'lucide-react'
 import NewCustomerModal from './NewCustomerModal'
-import useCustomer from '../hooks/useCustomer'
+import { format } from 'date-fns'
+import { useSaveSale } from '../hooks/useSaveSale'
+import { auth } from '@/firebase/config'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { toast } from 'react-toastify'
+import SalesConfirmationModal from './SalesConfirmation'
 
 interface SalesModalProps {
-    isOpen: boolean;
-    onClose: () => void;
+    isOpen: boolean
+    onClose: () => void
 }
 
 export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
-    const [date, setDate] = React.useState<Date>()
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const { products, loading, error } = useProducts()
-    const { customers, customerLoading, customerError } = useCustomer()
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
+    const [productList, setProductList] = useState<any[]>([])
+    const { saveSale, loading } = useSaveSale()
+    const [user] = useAuthState(auth)
 
-    if (!isOpen) return null;
+    const handleMessage = () => {
+        setIsModalOpen(true)
+    }
+
+    const handleProductAdd = (product: any) => {
+        setProductList(prevList => [...prevList, product])
+    }
+
+    const handleSaveSale = useCallback(async () => {
+        const grandTotal = productList.reduce((sum, product) => sum + (Number(product.price) * product.quantity), 0)
+
+        const saleData = {
+            customerName: productList[0]?.customer || 'Unknown Customer',
+            products: productList.map(product => ({
+                ...product,
+                price: Number(product.price),
+                quantityOrdered: product.quantity,
+                subtotal: Number(product.price) * product.quantity,
+                date: product.date ? format(product.date, "yyyy-MM-dd") : '',
+            })),
+            grandTotal,
+            status: 'Pending' as const,
+            paid: 0,
+            due: grandTotal,
+            paymentStatus: 'Due' as const,
+            biller: user?.uid || 'unknown',
+        }
+
+        console.log("Prepared saleData:", saleData)
+
+        try {
+            const success = await saveSale(saleData)
+            if (success) {
+                toast.success('Sale saved successfully')
+                setProductList([]) // Reset product list
+
+                // First, close the main sales modal
+                onClose()
+
+                
+            }
+        } catch (error: any) {
+            toast.error(`Failed to save sale: ${error.message || 'An error occurred'}`)
+        }
+    }, [productList, saveSale, user, onClose])
+
+    const handleCloseConfirmation = () => {
+        setIsConfirmationOpen(false)
+        console.log("Closing Sales Confirmation Modal")
+    }
+
+    const handleEmailInvoice = () => {
+        toast.info("Invoice will be emailed!")
+    }
+
+    const handlePrintInvoice = () => {
+        toast.info("Invoice will be printed!")
+    }
+
+    if (!isOpen) return null
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -52,174 +102,63 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
                     </Button>
                 </div>
                 <div className="p-4 space-y-4">
-                    <div className="grid grid-cols-3 gap-4">
-                        <div>
-                            <div className="flex justify-between items-center mb-2">
-                                <Label htmlFor="category">Customer Name *</Label>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 px-2 text-xs"
-                                    type="button"
-                                    onClick={
-                                        () => setIsModalOpen(true)
-                                    }
-                                >
-                                    <PlusCircle className="mr-1 h-3 w-3" />
-                                    Add New
-                                </Button>
-                            </div>
-                            <Select
-                                name="category"
-                                required
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Choose" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value='pass-by customer'>
-                                        Pass-by Customer
-                                    </SelectItem>
-                                    {customers?.map((customer) => (
-                                        <SelectItem key={customer.id} value={customer.name}>
-                                            {customer.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label htmlFor="date">Date</Label>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className={`w-full justify-start text-left font-normal mt-4 ${!date && "text-muted-foreground"}`}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {date ? format(date, "PPP") : <span>Choose date</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
-                                    <Calendar
-                                        mode="single"
-                                        selected={date}
-                                        onSelect={setDate}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-                        <div>
-                            <Label htmlFor="quantity">Quantity *</Label>
-                            <Input
-                                id="quantity"
-                                name="quantity"
-                                type="number"
-                                className="mt-4"
-                                placeholder="Enter quantity"
-                                // value={formData.quantity}
-                                // onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <Label htmlFor="productName">Product Name</Label>
-                        <div className="flex">
-                            <Select
-                                name="product"
-                                required
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Choose" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {products?.map((product) => (
-                                        <SelectItem key={product.id} value={product.productName}>
-                                            {product.productName}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                    <div className="flex w-full justify-end">
-                        <Button className="bg-blue-500 hover:bg-blue-400" size={"sm"}><PlusCircle /> Add product</Button>
-                    </div>
+                    <SalesForm onClosing={handleMessage} onProductAdd={handleProductAdd} />
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>Customer</TableHead>
                                 <TableHead>Product</TableHead>
                                 <TableHead>Quantity</TableHead>
-                                {/* <TableHead>Purchase Price($)</TableHead> */}
-                                {/* <TableHead>Discount($)</TableHead>
-                                <TableHead>Tax(%)</TableHead>
-                                <TableHead>Tax Amount($)</TableHead> */}
-                                <TableHead>Unit Price(FCFA)</TableHead>
-                                <TableHead>Total Cost(FCFA)</TableHead>
+                                <TableHead>Price</TableHead>
+                                <TableHead>Due Date</TableHead>
+                                <TableHead>Total Price</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow>
-                                <TableCell className="font-medium">Product 1</TableCell>
-                                <TableCell>1</TableCell>
-                                {/* <TableCell>100.00</TableCell> */}
-                                {/* <TableCell>0.00</TableCell>
-                                <TableCell>10</TableCell>
-                                <TableCell>10.00</TableCell> */}
-                                <TableCell>110</TableCell>
-                                <TableCell>110</TableCell>
-                            </TableRow>
+                            {productList.map((product, index) => (
+                                <TableRow key={index}>
+                                    <TableCell className="font-medium">{product.customer}</TableCell>
+                                    <TableCell className="font-medium">{product.product}</TableCell>
+                                    <TableCell>{product.quantity}</TableCell>
+                                    <TableCell>{product.price}</TableCell>
+                                    <TableCell>{product.date ? format(product.date, "PPP") : '-'}</TableCell>
+                                    <TableCell>{product.price * product.quantity}</TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
-                    {/* <div className="flex justify-end space-x-4">
+                    <div className="flex justify-end space-x-4">
                         <div className="text-right">
-                            <p>Order Tax</p>
-                            <p>Discount</p>
-                            <p>Shipping</p>
                             <p className="font-bold">Grand Total</p>
                         </div>
                         <div className="text-right">
-                            <p>$ 0.00</p>
-                            <p>$ 0.00</p>
-                            <p>$ 0.00</p>
-                            <p className="font-bold">$ 0.00</p>
+                            {productList.map((product, index) => (
+                                <p className="font-bold">{product.price * product.quantity} FCFA</p>
+                            ))}
                         </div>
                     </div>
-                    <div className="grid grid-cols-4 gap-4">
-                        <div>
-                            <Label htmlFor="orderTax">Order Tax</Label>
-                            <Input id="orderTax" type="number" placeholder="0" />
-                        </div>
-                        <div>
-                            <Label htmlFor="discount">Discount</Label>
-                            <Input id="discount" type="number" placeholder="0" />
-                        </div>
-                        <div>
-                            <Label htmlFor="shipping">Shipping</Label>
-                            <Input id="shipping" type="number" placeholder="0" />
-                        </div>
-                        <div>
-                            <Label htmlFor="status">Status</Label>
-                            <Select>
-                                <SelectTrigger id="status">
-                                    <SelectValue placeholder="Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="completed">Completed</SelectItem>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div> */}
                 </div>
                 <div className="flex justify-end space-x-2 p-4 border-t">
                     <Button variant="outline" onClick={onClose}>Cancel</Button>
-                    <Button className="bg-blue-500 hover:bg-bkue-400">Submit</Button>
+                    <Button
+                        className="bg-blue-500 hover:bg-blue-400"
+                        onClick={handleSaveSale}
+                        disabled={loading}
+                    >
+                        {loading ? 'Saving...' : 'Submit'}
+                    </Button>
                 </div>
             </div>
+
             <NewCustomerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+            {/* Sales Confirmation Modal */}
+            <SalesConfirmationModal
+                isOpen={isConfirmationOpen}
+                onClose={handleCloseConfirmation}
+                onEmailInvoice={handleEmailInvoice}
+                onPrintInvoice={handlePrintInvoice}
+            />
         </div>
     )
 }

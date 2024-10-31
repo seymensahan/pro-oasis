@@ -1,30 +1,23 @@
-"use client";
-
 import React, { useEffect, useState } from 'react';
 import { Product } from '../../product/types';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { auth, firestore } from '@/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 const useProducts = () => {
     const [products, setProducts] = useState<Product[]>([]);
+    const [selectedProductData, setSelectedProductData] = useState<Product | null>(null);
     const [user] = useAuthState(auth);
 
-    // Set up query based on authentication status
     const productsQuery = user
-        ? query(
-            collection(firestore, 'products'),
-            where('userId', '==', user.uid),
-        )
+        ? query(collection(firestore, 'products'), where('userId', '==', user.uid))
         : null;
 
-    // Fetch product data and states from Firestore
     const [productCollection, loading, error] = useCollectionData(productsQuery, {
         snapshotListenOptions: { includeMetadataChanges: true },
     });
 
-    // Transform and set product data on change
     useEffect(() => {
         if (productCollection && !loading) {
             const fetchedProducts = productCollection.map((doc: any) => ({
@@ -41,8 +34,18 @@ const useProducts = () => {
         }
     }, [productCollection, loading]);
 
-    // Return products along with loading and error states
-    return { products, loading, error };
+    const getProductByName = async (name: string | null) => {
+        try {
+            const q = query(collection(firestore, "products"), where("productName", "==", name));
+            const querySnapshot = await getDocs(q);
+            const product = querySnapshot.docs[0]?.data() ?? null;
+            setSelectedProductData(product as Product);
+        } catch (error: any) {
+            console.error("Error fetching product:", error.message);
+        }
+    };
+
+    return { getProductByName, selectedProductData, products, loading, error };
 };
 
 export default useProducts;

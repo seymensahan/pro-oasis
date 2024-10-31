@@ -14,53 +14,15 @@ import { collection, query, where, orderBy } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
+import useProducts from '../sales/hooks/useProducts';
 
 export default function Page() {
-    const [products, setProducts] = useState<Product[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('name'); // Default sort by 'name'
     const itemsPerPage = 10;
-
-    const [user] = useAuthState(auth);
-
-    useEffect(() => {
-        if (user) {
-            console.log("User ID:", user.uid);  // Log the UID when the user is authenticated
-        } else {
-            console.log("No user is logged in.");
-        }
-    }, [user]);
-
-    const productsQuery = user
-        ? query(
-            collection(firestore, 'products'),
-            where('userId', '==', user.uid),
-            // orderBy(sortBy) // Default sorting by 'name'
-        )
-        : null;
-
-    const [productCollection, loading, error] = useCollectionData(productsQuery, {
-        snapshotListenOptions: { includeMetadataChanges: true },
-    });
-
-    useEffect(() => {
-        if (productCollection && !loading) {
-            // Ensure Firestore data is correctly transformed into Product[]
-            const fetchedProducts = productCollection.map((doc: any) => ({
-                id: doc.id,
-                productName: doc.productName,
-                userId: doc.userId,
-                category: doc.category,
-                brand: doc.brand,
-                price: doc.price,
-                unit: doc.unit,
-                quantity: doc.quantity,
-            }));
-            setProducts(fetchedProducts as Product[]);
-        }
-    }, [productCollection, loading]);
-
+    const { products, loading, error } = useProducts()
+    
     const filteredProducts = products?.filter(product =>
         product?.productName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         // product?.userId?.toLowerCase().includes(searchTerm.toLowerCase()) ||

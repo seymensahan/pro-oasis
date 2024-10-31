@@ -1,30 +1,15 @@
-// File: components/sales/SalesTable.tsx
-
 import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { ArrowDownUp, MoreVertical } from 'lucide-react'
-
-// Define the type for the sales data items
-interface Sale {
-    id: number
-    customerName: string
-    reference: string
-    date: string
-    status: 'Completed' | 'Pending'
-    grandTotal: number
-    paid: number
-    due: number
-    paymentStatus: 'Paid' | 'Due'
-    biller: string
-}
+import { SaleData } from '../types'
 
 interface SalesTableProps {
-    salesData: Sale[]  // List of current sales data (after filtering & pagination)
-    sortField: string
+    salesData: SaleData[] // Use SaleData directly for type consistency
+    sortField: keyof SaleData
     sortDirection: "asc" | "desc"
-    onSort: (field: string) => void
+    onSort: (field: keyof SaleData) => void
 }
 
 const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirection, onSort }) => {
@@ -36,7 +21,6 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                         <TableHead className="w-12">
                             <Checkbox />
                         </TableHead>
-                        {/* Add onClick handlers to make columns sortable */}
                         <TableHead onClick={() => onSort("customerName")} className="cursor-pointer">
                             <div className="flex items-center">
                                 <span>Customer Name</span>
@@ -55,12 +39,6 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
-                        {/* <TableHead onClick={() => onSort("status")} className="cursor-pointer">
-                            <div className="flex items-center">
-                                <span>Status</span>
-                                <ArrowDownUp className="h-4 w-4 ml-1" />
-                            </div>
-                        </TableHead> */}
                         <TableHead onClick={() => onSort("grandTotal")} className="cursor-pointer">
                             <div className="flex items-center">
                                 <span>Grand Total</span>
@@ -85,12 +63,6 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
-                        {/* <TableHead onClick={() => onSort("biller")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
-                                <span>Biller</span>
-                                <ArrowDownUp className="h-4 w-4 ml-1" />
-                            </div>
-                        </TableHead> */}
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -103,18 +75,7 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 </TableCell>
                                 <TableCell className="font-medium">{sale.customerName}</TableCell>
                                 <TableCell>{sale.reference}</TableCell>
-                                <TableCell>{sale.date}</TableCell>
-                                {/* <TableCell>
-                                    <span
-                                        className={`px-2 py-1 rounded-full text-xs ${
-                                            sale.status === 'Completed'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
-                                        }`}
-                                    >
-                                        {sale.status}
-                                    </span>
-                                </TableCell> */}
+                                <TableCell>{new Date(sale.date).toLocaleDateString()}</TableCell>
                                 <TableCell>{sale.grandTotal.toFixed(2)} FCFA</TableCell>
                                 <TableCell>{sale.paid.toFixed(2)} FCFA</TableCell>
                                 <TableCell>{sale.due.toFixed(2)} FCFA</TableCell>
@@ -129,7 +90,6 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                         {sale.paymentStatus}
                                     </span>
                                 </TableCell>
-                                {/* <TableCell>{sale.biller}</TableCell> */}
                                 <TableCell>
                                     <Button variant="ghost" size="icon">
                                         <MoreVertical className="h-4 w-4" />
