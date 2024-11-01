@@ -162,7 +162,7 @@ export default function SalesDetail({ isOpen, onClose, salesData }: SalesModalPr
                         <CardContent className="space-y-2">
                             <div>
                                 <span className="text-sm font-medium">Name:</span>
-                                <span className="text-sm ml-2">{salesData.customer}</span>
+                                <span className="text-sm ml-2">{salesData.customerName}</span>
                             </div>
                             <div>
                                 <span className="text-sm font-medium">Email:</span>
@@ -214,7 +214,7 @@ export default function SalesDetail({ isOpen, onClose, salesData }: SalesModalPr
                             </div>
                             <div>
                                 <span className="text-sm font-medium">Payment Status:</span>
-                                <Badge variant="success" className="ml-2">{salesData.payementStatus}</Badge>
+                                <Badge variant="success" className="ml-2">{salesData.status}</Badge>
                             </div>
                             <div>
                                 <span className="text-sm font-medium">Status:</span>
