@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import SalesHeader from '@/app/dashboard/sales/components/SalesHeader';
 import SalesSearchAndFilter from '@/app/dashboard/sales/components/SalesSearchAndFilter';
