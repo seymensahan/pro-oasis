@@ -214,11 +214,11 @@ export default function SalesDetail({ isOpen, onClose, salesData }: SalesModalPr
                             </div>
                             <div>
                                 <span className="text-sm font-medium">Payment Status:</span>
-                                <Badge variant="success" className="ml-2">{salesData.status}</Badge>
+                                <Badge className="ml-2">{salesData.status}</Badge>
                             </div>
                             <div>
                                 <span className="text-sm font-medium">Status:</span>
-                                <Badge variant="success" className="ml-2">{salesData.paid}</Badge>
+                                <Badge className="ml-2">{salesData.paid}</Badge>
                             </div>
                         </CardContent>
                     </Card>
