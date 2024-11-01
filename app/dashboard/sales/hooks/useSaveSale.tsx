@@ -1,5 +1,5 @@
 import { firestore } from '@/firebase/config'
-import { collection, doc, setDoc, updateDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore'
+import { collection, doc, setDoc, updateDoc, serverTimestamp, query, where, getDocs, Timestamp } from 'firebase/firestore'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -12,7 +12,7 @@ interface Product {
 
 interface SaleProduct extends Product {
     customer: string
-    date: string
+    date: Timestamp
     product: string
     quantity: number
     quantityOrdered: number
@@ -28,7 +28,7 @@ interface SaleData {
     due: number
     paymentStatus: 'Paid' | 'Due'
     biller: string
-    reference: string
+    reference?: string
 }
 
 export const useSaveSale = () => {

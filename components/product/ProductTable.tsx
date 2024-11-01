@@ -1,5 +1,5 @@
 import React from 'react';
-import { Product } from '@/app/dashboard/product/types';
+import { Product } from '@/app/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";

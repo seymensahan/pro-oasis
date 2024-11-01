@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Product } from './types';
+import { Product } from '../../types';
 import { ProductTable } from '@/components/product/ProductTable';
 import { SearchAndSort } from '@/components/product/SearchAndSort';
 import ProductPagination from '@/components/product/ProductPagination';

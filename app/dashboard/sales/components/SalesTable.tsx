@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
-import { ArrowDownUp, MoreVertical } from 'lucide-react'
+import { ArrowDownUp, Edit, Eye, MoreVertical, Trash } from 'lucide-react'
 import { SaleData } from '../types'
+import { boolean, number } from 'zod'
+import { Timestamp } from 'firebase/firestore'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import SalesDetail from './SalesDetails'
 
 interface SalesTableProps {
     salesData: SaleData[] // Use SaleData directly for type consistency
@@ -12,7 +16,17 @@ interface SalesTableProps {
     onSort: (field: keyof SaleData) => void
 }
 
+const formatDate = (timestamp: Timestamp): string => {
+    const date = timestamp.toDate();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+};
+
 const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirection, onSort }) => {
+    const [saleInfo, setSaleInfo] = useState(false)
+
     return (
         <div className="bg-white p-5 shadow-md rounded-lg overflow-hidden">
             <Table>
@@ -75,26 +89,47 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 </TableCell>
                                 <TableCell className="font-medium">{sale.customerName}</TableCell>
                                 <TableCell>{sale.reference}</TableCell>
-                                <TableCell>{new Date(sale.date).toLocaleDateString()}</TableCell>
+                                <TableCell>{formatDate(sale.date)}</TableCell>
                                 <TableCell>{sale.grandTotal.toFixed(2)} FCFA</TableCell>
                                 <TableCell>{sale.paid.toFixed(2)} FCFA</TableCell>
                                 <TableCell>{sale.due.toFixed(2)} FCFA</TableCell>
                                 <TableCell>
                                     <span
-                                        className={`flex px-6 py-2 justify-center items-center w-[50%] ml-[20%] rounded-full text-xs ${
-                                            sale.paymentStatus === 'Paid'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
-                                        }`}
+                                        className={`flex px-6 py-2 justify-center items-center w-[50%] ml-[20%] rounded-full text-xs ${sale.paymentStatus === 'Paid'
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-red-100 text-red-800'
+                                            }`}
                                     >
                                         {sale.paymentStatus}
                                     </span>
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant="ghost" size="icon">
-                                        <MoreVertical className="h-4 w-4" />
-                                    </Button>
+                                    <Popover>
+                                        <PopoverTrigger>
+                                            <Button variant="ghost" size="icon">
+                                                <MoreVertical className="h-4 w-4" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="p-2 w-100 ">
+                                            <div className="flex flex-col space-y-2">
+                                                <button className="flex items-center space-x-2 hover:bg-blue-100 p-2 rounded" onClick={() => setSaleInfo(true)}>
+                                                    <Eye className="h-4 w-4" />
+                                                    <span>Sale Details</span>
+                                                </button>
+                                                <button className="flex items-center space-x-2 hover:bg-blue-100 p-2 rounded">
+                                                    <Edit className="h-4 w-4" />
+                                                    <span>Edit Payment</span>
+                                                </button>
+                                                <button className="flex items-center space-x-2 hover:bg-red-100 p-2 rounded">
+                                                    <Trash className="h-4 w-4" />
+                                                    <span>Delete Sale</span>
+                                                </button>
+                                            </div>
+                                        </PopoverContent>
+                                    </Popover>
+
                                 </TableCell>
+                                <SalesDetail isOpen={saleInfo} onClose={() => setSaleInfo(false)} salesData={sale} />
                             </TableRow>
                         ))
                     ) : (

@@ -1,5 +1,5 @@
 import { auth, firestore } from '@/firebase/config';
-import { Product } from './types';
+import { Product } from '../../types';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { collection, query, where } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';

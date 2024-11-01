@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore"
+
 interface Product {
     id: string
     name: string
@@ -18,7 +20,7 @@ export interface SaleProduct extends Product {
 export interface SaleData {
     id: string
     customerName: string
-    // products: SaleProduct[]
+    products: SaleProduct[]
     grandTotal: number
     status: 'Completed' | 'Pending'
     paid: number
@@ -26,5 +28,5 @@ export interface SaleData {
     paymentStatus: 'Paid' | 'Due'
     biller: string
     reference: string
-    date: string
+    date: Timestamp
 }

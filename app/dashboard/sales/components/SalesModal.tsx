@@ -1,5 +1,5 @@
 // SalesModal.tsx
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     Table,
@@ -31,6 +31,11 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
     const { saveSale, loading } = useSaveSale()
     const [user] = useAuthState(auth)
 
+    // Calculate grand total using useMemo to avoid recalculating on every render
+    const grandTotal = useMemo(() => {
+        return productList.reduce((sum, product) => sum + (Number(product.price) * product.quantity), 0)
+    }, [productList])
+
     const handleMessage = () => {
         setIsModalOpen(true)
     }
@@ -40,8 +45,6 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
     }
 
     const handleSaveSale = useCallback(async () => {
-        const grandTotal = productList.reduce((sum, product) => sum + (Number(product.price) * product.quantity), 0)
-
         const saleData = {
             customerName: productList[0]?.customer || 'Unknown Customer',
             products: productList.map(product => ({
@@ -66,16 +69,12 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
             if (success) {
                 toast.success('Sale saved successfully')
                 setProductList([]) // Reset product list
-
-                // First, close the main sales modal
-                onClose()
-
-                
+                onClose() // Close the main sales modal
             }
         } catch (error: any) {
             toast.error(`Failed to save sale: ${error.message || 'An error occurred'}`)
         }
-    }, [productList, saveSale, user, onClose])
+    }, [productList, saveSale, user, onClose, grandTotal])
 
     const handleCloseConfirmation = () => {
         setIsConfirmationOpen(false)
@@ -93,7 +92,7 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 m-10">
             <div className="bg-white rounded-lg w-[800px] max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center p-4 border-b">
                     <h2 className="text-xl font-semibold">Add Sales</h2>
@@ -120,22 +119,16 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
                                     <TableCell className="font-medium">{product.customer}</TableCell>
                                     <TableCell className="font-medium">{product.product}</TableCell>
                                     <TableCell>{product.quantity}</TableCell>
-                                    <TableCell>{product.price}</TableCell>
+                                    <TableCell>{Number(product.price).toFixed(2)}</TableCell>
                                     <TableCell>{product.date ? format(product.date, "PPP") : '-'}</TableCell>
-                                    <TableCell>{product.price * product.quantity}</TableCell>
+                                    <TableCell>{(Number(product.price) * product.quantity).toFixed(2)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
-                    <div className="flex justify-end space-x-4">
-                        <div className="text-right">
-                            <p className="font-bold">Grand Total</p>
-                        </div>
-                        <div className="text-right">
-                            {productList.map((product, index) => (
-                                <p className="font-bold">{product.price * product.quantity} FCFA</p>
-                            ))}
-                        </div>
+                    <div className="flex justify-end space-x-4 p-4">
+                        <p className="font-bold text-right">Grand Total:</p>
+                        <p className="font-bold text-right">{grandTotal.toFixed(2)} FCFA</p>
                     </div>
                 </div>
                 <div className="flex justify-end space-x-2 p-4 border-t">
@@ -151,14 +144,6 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
             </div>
 
             <NewCustomerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-
-            {/* Sales Confirmation Modal */}
-            <SalesConfirmationModal
-                isOpen={isConfirmationOpen}
-                onClose={handleCloseConfirmation}
-                onEmailInvoice={handleEmailInvoice}
-                onPrintInvoice={handlePrintInvoice}
-            />
         </div>
     )
 }

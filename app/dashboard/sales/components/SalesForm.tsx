@@ -94,7 +94,7 @@ const SalesForm = ({ onProductAdd, onClosing }: any) => {
                         <Label htmlFor="date">Due Date</Label>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className={`w-full ${!date && "text-muted-foreground"}`}>
+                                <Button variant="outline" className={`w-full ${!date && "text-muted-foreground"} mt-2`}>
                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                     {date ? format(date, "PPP") : <span>Choose date</span>}
                                 </Button>
@@ -113,7 +113,7 @@ const SalesForm = ({ onProductAdd, onClosing }: any) => {
 
                 <div>
                     <Label htmlFor="quantity">Quantity *</Label>
-                    <Input id="quantity" type="number" placeholder="Enter quantity" value={quantity ?? ''} onChange={(e) => setQuantity(Number(e.target.value))} required />
+                    <Input id="quantity" className='mt-2' type="number" placeholder="Enter quantity" value={quantity ?? ''} onChange={(e) => setQuantity(Number(e.target.value))} required />
                 </div>
             </div>
 
