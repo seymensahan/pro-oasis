@@ -20,6 +20,7 @@ import useProducts from '../hooks/useProducts';
 import useCustomer from '../hooks/useCustomer';
 import { Button } from '@/components/ui/button';
 import { toast } from 'react-toastify';
+import { SelectSingleEventHandler } from 'react-day-picker';
 
 const SalesForm = ({ onProductAdd, onClosing }: any) => {
     const { getProductByName, selectedProductData, products } = useProducts();
@@ -30,6 +31,11 @@ const SalesForm = ({ onProductAdd, onClosing }: any) => {
     const [quantity, setQuantity] = useState<number | undefined>(undefined);
 
     const openModal = () => onClosing();
+
+    const handleDateSelect: SelectSingleEventHandler = (day: Date | undefined) => {
+        setDate(day || null);
+    };
+
 
     const handleCustomerChange = (value: string) => setSelectedCustomer(value);
 
@@ -52,7 +58,7 @@ const SalesForm = ({ onProductAdd, onClosing }: any) => {
         const productEntry = {
             customer: selectedCustomer,
             product: selectedProduct,
-            price: selectedProductData.price, 
+            price: selectedProductData.price,
             quantity,
             date,
         };
@@ -103,7 +109,7 @@ const SalesForm = ({ onProductAdd, onClosing }: any) => {
                                 <Calendar
                                     mode="single"
                                     selected={date || undefined}
-                                    onSelect={setDate}
+                                    onSelect={handleDateSelect}
                                     initialFocus
                                 />
                             </PopoverContent>
