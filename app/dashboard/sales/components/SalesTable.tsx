@@ -10,11 +10,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import SalesDetail from './SalesDetails'
 
 interface SalesTableProps {
-    salesData: SaleData[] // Use SaleData directly for type consistency
-    sortField: keyof SaleData
-    sortDirection: "asc" | "desc"
-    onSort: (field: keyof SaleData) => void
+    salesData: SaleData[];
+    sortField: keyof SaleData; // Update to keyof SaleData
+    sortDirection: 'asc' | 'desc';
+    onSort: (field: keyof SaleData) => void; // Update to keyof SaleData
 }
+
 
 const formatDate = (timestamp: Timestamp): string => {
     const date = timestamp.toDate();
