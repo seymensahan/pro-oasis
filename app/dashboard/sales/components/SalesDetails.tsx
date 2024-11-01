@@ -23,6 +23,7 @@ import {
     X,
 } from "lucide-react";
 import { useState, useMemo } from "react";
+import { SaleData } from "../types";
 
 interface OrderItem {
     id: string;
@@ -40,6 +41,7 @@ interface OrderItem {
 interface SalesModalProps {
     isOpen: boolean;
     onClose: () => void;
+    salesData: SaleData;
 }
 
 export default function SalesDetail({ isOpen, onClose, salesData }: SalesModalProps) {
