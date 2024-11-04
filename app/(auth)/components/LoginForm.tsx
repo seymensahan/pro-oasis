@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from 'next/link'
-import { useLogin } from '@/hooks/useLogin'
+import { useLogin } from '@/app/(auth)/Hooks/useLogin'
 import { Loader2 } from "lucide-react"
 
 export function LoginForm() {

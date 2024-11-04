@@ -8,7 +8,7 @@ import SalesPagination from '@/app/dashboard/sales/components/SalesPagination';
 import { useSales } from './hooks/useSales';
 import { SaleData } from './types';
 
-const SalesList: React.FC = () => {
+const SalesList = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [sortField, setSortField] = useState<keyof SaleData>('date');

@@ -1,4 +1,4 @@
-import RegisterForm from '@/components/auth/RegisterForm'
+import RegisterForm from '@/app/(auth)/components/RegisterForm'
 import { PieChart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'

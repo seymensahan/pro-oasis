@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { User, Mail, Loader2 } from 'lucide-react'
-import { useRegister } from '@/hooks/useRegister'
+import { useRegister } from '@/app/(auth)/Hooks/useRegister'
 
 export default function RegisterForm() {
     const [showPassword, setShowPassword] = useState(false)

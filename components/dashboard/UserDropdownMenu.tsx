@@ -9,18 +9,11 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogoutButton } from '../LogoutButton';
+import { LogoutButton } from '../../app/(auth)/Hooks/LogoutButton';
+import useAuthStore from '@/store/authStore';
 
 const UserDropdownMenu = () => {
-    const [userName, setUserName] = useState('User');
-
-    useEffect(() => {
-        const userInfo = localStorage.getItem('user-info');
-        if (userInfo) {
-            const { name } = JSON.parse(userInfo);
-            setUserName(name || 'User');
-        }
-    }, []);
+    const user = useAuthStore((state) => state.user)
 
     return (
         <DropdownMenu>
@@ -32,7 +25,7 @@ const UserDropdownMenu = () => {
                         className="h-8 w-8 rounded-full"
                     />
                     <div className="text-left">
-                        <div className="text-sm font-medium">{userName}</div>
+                        <div className="text-sm font-medium">{user?.name}</div>
                     </div>
                     <ChevronDown className="h-4 w-4" />
                 </Button>

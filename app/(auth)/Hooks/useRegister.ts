@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthState, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
+import useAuthStore from '@/store/authStore';
 
 interface FormData {
     name: string;
@@ -13,6 +14,16 @@ interface FormData {
 
 export const useRegister = () => {
     const router = useRouter();
+    const loginUser = useAuthStore((state) => state.loginUser);
+    const userStore = useAuthStore((state) => state.user);
+
+    const [
+        createUserWithEmailAndPassword,
+        user,
+        loading,
+        error,
+    ] = useCreateUserWithEmailAndPassword(auth);
+
     const [formData, setFormData] = useState<FormData>({
         name: "",
         email: "",
@@ -21,19 +32,11 @@ export const useRegister = () => {
     });
     const [errors, setErrors] = useState<string | null>(null);
 
-    const [
-        createUserWithEmailAndPassword,
-        user,
-        loading,
-        error,
-    ] = useCreateUserWithEmailAndPassword(auth);
-    const [authUser, authLoading] = useAuthState(auth);
-
     useEffect(() => {
-        if (authUser || user) {
+        if (userStore || user) {
             router.push('/dashboard');
         }
-    }, [authUser, user, router]);
+    }, [userStore, user, router]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData(prev => ({
@@ -45,6 +48,7 @@ export const useRegister = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        // Validate form fields
         if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
             setErrors("Please fill all fields");
             return;
@@ -64,12 +68,21 @@ export const useRegister = () => {
                     name: formData.name,
                     email: formData.email,
                     createdAt: serverTimestamp(),
-                    role: "",
-                    profilepic: "",
+                    role: "",  // You can assign a default role here if needed
+                    profilepic: "",  // Set an empty string or default image path
                 };
 
+                // Store user data in Firestore
                 await setDoc(doc(firestore, "users", newUser.user.uid), userData);
+
+                // Save user data in Zustand store
+                loginUser(userData);
+
+                // Store user data in localStorage
                 localStorage.setItem("user-info", JSON.stringify(userData));
+
+                // Redirect to dashboard after successful registration
+                router.push('/dashboard');
             }
         } catch (error: any) {
             console.error("Error creating user:", error.message);
