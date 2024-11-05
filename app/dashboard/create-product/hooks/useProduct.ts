@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { ServiceDataProps } from '../utils/Types'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { ProductDataProps, ServiceDataProps } from '../../../../lib/Types'
+import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore'
 import { firestore, storage } from '@/firebase/config'
 import useAuthStore from '@/store/authStore'
 import { toast } from 'react-toastify'
@@ -10,6 +10,8 @@ import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } 
 const useProduct = () => {
     const [serviceLoading, setServiceLoading] = useState<boolean>(false)
     const [serviceError, setServiceError] = useState<string | null>(null)
+    const [productLoading, setProductLoading] = useState<boolean>(false)
+    const [productError, setProductError] = useState<string | null>(null)
     const user = useAuthStore((state) => state.user);
     const [images, setImages] = useState<{ url: string; path: string; progress: number; }[]>([]);
 
@@ -18,7 +20,7 @@ const useProduct = () => {
         const files = e.target.files;
         if (files) {
             Array.from(files).forEach((file) => {
-                const storagePath = `services/${file.name}`;
+                const storagePath = `images/${file.name}`;
                 const storageRef = ref(storage, storagePath);
                 const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -95,7 +97,42 @@ const useProduct = () => {
         }
     }
 
-    return { addService, serviceError, serviceLoading, handleImageUpload, handleImageRemove, images }
+    const addProduct = async (productData: ProductDataProps) => {
+        const productSaveData = {
+            ...productData,
+            createdAt: serverTimestamp(),
+            owner: user.uid,
+        }
+
+        try {
+            setProductLoading(true)
+            setProductError(null)
+
+            const q = query(collection(firestore, "products"), where("name", "==", productData.name));
+            const querySnapshot = await getDocs(q)
+
+            if (!querySnapshot.empty) {
+                toast.error("Sorry your inventory already contains this product. Just update it's detail!");
+                return;
+            }
+
+
+            if(!productData.name || !productData.category || !productData.price || !productData.stock) {
+                toast.error("Please will all the neccessary fields (*)")
+                return 
+            }
+
+            await addDoc(collection(firestore, "products"), productSaveData)
+            toast.success("Product Added Successfully!")
+        } catch (error: any) {
+            setProductError(error.message)
+            toast(`An error occured while creating new product ${error.message}`)
+        } finally {
+            setProductLoading(false)
+        }
+    }
+
+    return { addProduct, addService, serviceError, serviceLoading, handleImageUpload, handleImageRemove, images }
 }
 
 export default useProduct

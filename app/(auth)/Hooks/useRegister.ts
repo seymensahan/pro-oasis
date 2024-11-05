@@ -62,14 +62,15 @@ export const useRegister = () => {
         try {
             const newUser = await createUserWithEmailAndPassword(formData.email, formData.password);
 
+
             if (newUser) {
                 const userData = {
                     uid: newUser.user.uid,
                     name: formData.name,
                     email: formData.email,
                     createdAt: serverTimestamp(),
-                    role: "",  // You can assign a default role here if needed
-                    profilepic: "",  // Set an empty string or default image path
+                    role: "",  
+                    profilepic: "",  
                 };
 
                 // Store user data in Firestore

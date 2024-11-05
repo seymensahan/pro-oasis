@@ -9,13 +9,12 @@ import { Loader, Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { storage } from "@/firebase/config";
-import { FormSubmitProps } from "../utils/Types";
+import { FormSubmitProps } from "../../../../lib/Types";
 import { Progress } from "@/components/ui/progress";
 import useProduct from "../hooks/useProduct";
 
 export default function ServiceForm({ onSubmit }: FormSubmitProps) {
     const router = useRouter();
-    const [uploadProgress, setUploadProgress] = useState(0);
     const { serviceLoading, handleImageRemove, handleImageUpload, images } = useProduct()
 
     const [serviceData, setServiceData] = useState({

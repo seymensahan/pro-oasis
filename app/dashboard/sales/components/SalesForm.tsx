@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon, PlusCircle } from "lucide-react";
 import { format } from "date-fns";
-import useProducts from '../hooks/useProducts';
+import useProducts from '../../product/hooks/useGetProducts';
 import useCustomer from '../hooks/useCustomer';
 import { Button } from '@/components/ui/button';
 import { toast } from 'react-toastify';
@@ -50,8 +50,8 @@ const SalesForm = ({ onProductAdd, onClosing }: any) => {
         if (!selectedProductData) return;
 
         // Check for stock sufficiency
-        if (quantity && selectedProductData.quantity && quantity > selectedProductData.quantity) {
-            toast.error(`Insufficient stock! Only ${selectedProductData.quantity} available.`);
+        if (quantity && selectedProductData.stock && quantity > selectedProductData.stock) {
+            toast.error(`Insufficient stock! Only ${selectedProductData.stock} available.`);
             return; // Stop form submission
         }
 
@@ -130,8 +130,8 @@ const SalesForm = ({ onProductAdd, onClosing }: any) => {
                 </SelectTrigger>
                 <SelectContent>
                     {products?.map((product) => (
-                        <SelectItem key={product.id} value={product.productName}>
-                            {product.productName}
+                        <SelectItem key={product.id} value={product.name}>
+                            {product.name}
                         </SelectItem>
                     ))}
                 </SelectContent>

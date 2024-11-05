@@ -4,9 +4,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Product } from '../../types';
-import { ProductTable } from '@/components/product/ProductTable';
-import { SearchAndSort } from '@/components/product/SearchAndSort';
-import ProductPagination from '@/components/product/ProductPagination';
+import { ProductTable } from '@/app/dashboard/product/components/ProductTable';
+import { SearchAndSort } from '@/app/dashboard/product/components/SearchAndSort';
+import ProductPagination from '@/app/dashboard/product/components/ProductPagination';
 import { ChevronDown, Download, FileUp, Plus, Printer, RefreshCcw, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -14,20 +14,21 @@ import { collection, query, where, orderBy } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import useProducts from '../sales/hooks/useProducts';
+import useGetProducts from './hooks/useGetProducts';
+import { ProductDataProps } from '../../../lib/Types';
 
 export default function Page() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('name'); // Default sort by 'name'
     const itemsPerPage = 10;
-    const { products, loading, error } = useProducts()
+    const { products, loading, error } = useGetProducts()
     
     const filteredProducts = products?.filter(product =>
-        product?.productName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         // product?.userId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product?.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product?.brand?.toLowerCase().includes(searchTerm.toLowerCase())
+        product?.category?.toLowerCase().includes(searchTerm.toLowerCase()) 
+        // product?.brand?.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
     
 
@@ -90,7 +91,7 @@ export default function Page() {
                         setSortBy={setSortBy}
                     />
                     <div className="bg-white shadow-md p-5 rounded-lg overflow-hidden">
-                        <ProductTable products={currentItems as Product[]} />
+                        <ProductTable products={currentItems as ProductDataProps[]} />
                     </div>
                     <ProductPagination
                         currentPage={currentPage}

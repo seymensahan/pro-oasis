@@ -4,9 +4,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye, Pencil, Trash2 } from 'lucide-react';
+import { ProductDataProps } from '@/lib/Types';
 
 interface ProductTableProps {
-    products: Product[];
+    products: ProductDataProps[];
 }
 
 export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
@@ -28,12 +29,12 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                             <ArrowUpDown className="ml-2 h-4 w-4" />
                         </div>
                     </TableHead>
-                    <TableHead>
+                    {/* <TableHead>
                         <div className="flex items-center">
                             Brand
                             <ArrowUpDown className="ml-2 h-4 w-4" />
                         </div>
-                    </TableHead>
+                    </TableHead> */}
                     <TableHead>
                         <div className="flex items-center">
                             Price
@@ -54,7 +55,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                     </TableHead>
                     <TableHead>
                         <div className="flex items-center">
-                            Created by
+                            Description
                             <ArrowUpDown className="ml-2 h-4 w-4" />
                         </div>
                     </TableHead>
@@ -69,21 +70,21 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                         </TableCell>
                         <TableCell className="font-medium">
                             <div className="flex items-center space-x-3">
-                                {/* Commented out image field */}
-                                {/* <img
-                                    src={product.image}
-                                    alt={product.name}
+                                <img
+                                    src={product?.images?.[0]?.url || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
+                                    alt={product?.name || "Product Image"}
                                     className="h-10 w-10 rounded-full"
-                                /> */}
-                                <span>{product.productName}</span>
+                                />
+
+                                <span>{product.name}</span>
                             </div>
                         </TableCell>
                         {/* <TableCell>{product.userId}</TableCell> */}
                         <TableCell>{product.category}</TableCell>
-                        <TableCell>{product.brand}</TableCell>
+                        {/* <TableCell>{product.brand}</TableCell> */}
                         <TableCell>{product.price} FCFA</TableCell>
                         <TableCell>{product.unit}</TableCell>
-                        <TableCell>{product.quantity}</TableCell>
+                        <TableCell>{product.stock}</TableCell>
                         <TableCell>
                             <div className="flex items-center space-x-2">
                                 {/* Commented out createdBy.avatar */}

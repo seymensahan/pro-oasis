@@ -4,14 +4,15 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { auth, firestore } from '@/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { ProductDataProps } from '../../../../lib/Types';
 
-const useProducts = () => {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [selectedProductData, setSelectedProductData] = useState<Product | null>(null);
+const useGetProducts = () => {
+    const [products, setProducts] = useState<ProductDataProps[]>([]);
+    const [selectedProductData, setSelectedProductData] = useState<ProductDataProps | null>(null);
     const [user] = useAuthState(auth);
 
     const productsQuery = user
-        ? query(collection(firestore, 'products'), where('userId', '==', user.uid))
+        ? query(collection(firestore, 'products'), where('owner', '==', user.uid))
         : null;
 
     const [productCollection, loading, error] = useCollectionData(productsQuery, {
@@ -22,24 +23,25 @@ const useProducts = () => {
         if (productCollection && !loading) {
             const fetchedProducts = productCollection.map((doc: any) => ({
                 id: doc.id,
-                productName: doc.productName,
-                userId: doc.userId,
+                name: doc.name,
+                owner: doc.userId,
                 category: doc.category,
-                brand: doc.brand,
                 price: doc.price,
+                description: doc.description,
                 unit: doc.unit,
-                quantity: doc.quantity,
+                stock: doc.stock,
+                images: doc.images || [],
             }));
-            setProducts(fetchedProducts as Product[]);
+            setProducts(fetchedProducts as ProductDataProps[]);
         }
     }, [productCollection, loading]);
 
     const getProductByName = async (name: string | null) => {
         try {
-            const q = query(collection(firestore, "products"), where("productName", "==", name));
+            const q = query(collection(firestore, "products"), where("name", "==", name));
             const querySnapshot = await getDocs(q);
             const product = querySnapshot.docs[0]?.data() ?? null;
-            setSelectedProductData(product as Product);
+            setSelectedProductData(product as ProductDataProps);
         } catch (error: any) {
             console.error("Error fetching product:", error.message);
         }
@@ -48,4 +50,4 @@ const useProducts = () => {
     return { getProductByName, selectedProductData, products, loading, error };
 };
 
-export default useProducts;
+export default useGetProducts;
