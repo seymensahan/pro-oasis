@@ -7,16 +7,17 @@ import { PieChart } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/firebase/config'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { useAuth } from '@/context/AuthContext'
 
 const HomeHeader = () => {
-    const [authUser, authLoading] = useAuthState(auth);
+    const { user, loading } = useAuth();
     const router = useRouter()
 
     useEffect(() => {
-        if (authUser) {
+        if (user) {
             router.push('/dashboard');
         }
-    }, [authUser, router]);
+    }, [user, router]);
 
     return (
         <header className="bg-white shadow-sm">

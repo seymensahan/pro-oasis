@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { ProductDataProps, ServiceDataProps } from '../../../../lib/Types'
 import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore'
 import { firestore, storage } from '@/firebase/config'
-import useAuthStore from '@/store/authStore'
 import { toast } from 'react-toastify'
 import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { useAuth } from '@/context/AuthContext'
 
 
 const useProduct = () => {
@@ -12,7 +12,7 @@ const useProduct = () => {
     const [serviceError, setServiceError] = useState<string | null>(null)
     const [productLoading, setProductLoading] = useState<boolean>(false)
     const [productError, setProductError] = useState<string | null>(null)
-    const user = useAuthStore((state) => state.user);
+    const { user } = useAuth();
     const [images, setImages] = useState<{ url: string; path: string; progress: number; }[]>([]);
 
 
@@ -80,7 +80,7 @@ const useProduct = () => {
         const serviceSaveData = {
             ...serviceData,
             createdAt: serverTimestamp(),
-            owner: user.uid
+            owner: user?.uid
         }
 
         try {
@@ -101,7 +101,7 @@ const useProduct = () => {
         const productSaveData = {
             ...productData,
             createdAt: serverTimestamp(),
-            owner: user.uid,
+            owner: user?.uid,
         }
 
         try {
@@ -117,9 +117,9 @@ const useProduct = () => {
             }
 
 
-            if(!productData.name || !productData.category || !productData.price || !productData.stock) {
+            if (!productData.name || !productData.category || !productData.price || !productData.stock) {
                 toast.error("Please will all the neccessary fields (*)")
-                return 
+                return
             }
 
             await addDoc(collection(firestore, "products"), productSaveData)

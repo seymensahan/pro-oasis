@@ -75,7 +75,7 @@ export default function RegisterForm() {
             </div>
             <div className="flex w-full justify-center items-center">
                 {errors && <p className="text-lg text-red-600">{errors}</p>}
-                {error && <p className="text-lg text-red-600">{error.message}</p>}
+                {/* {error && <p className="text-lg text-red-600">{error.message}</p>} */}
             </div>
             <Button className="w-full bg-blue-500 hover:bg-blue-400" type="submit">
                 {loading ? (

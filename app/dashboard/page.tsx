@@ -11,18 +11,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { ArrowUpRight, DollarSign, Users, Briefcase, FileText, ShoppingCart, ChevronRight, Search, Bell, Menu } from 'lucide-react'
-import useAuthStore from '@/store/authStore'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { ArrowUpRight, DollarSign, Users, ShoppingCart, ChevronRight } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
 
 const salesData = [
     { name: 'Jan', sales: 200, purchase: 120 },
@@ -47,7 +38,7 @@ const bestSellers = [
 ]
 
 export default function Dashboard() {
-    const user = useAuthStore((state) => state.user)
+    const { user } = useAuth();
 
     console.log("user info: ", user)
 
@@ -55,7 +46,7 @@ export default function Dashboard() {
         <div className="min-h-screen bg-gray-100">
             <div className="max-w-7xl mx-auto py-2 sm:px-6 lg:px-4">
                 <div className="px-4 py-6 sm:px-0">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome back, {user?.name}</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome back, {user?.displayName}</h1>
 
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         <Card className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white">

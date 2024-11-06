@@ -1,5 +1,5 @@
-import Header from "@/components/dashboard/Header";
-import Sidebar from "@/components/dashboard/Sidebar";
+import Header from "@/app/dashboard/components/Header";
+import Sidebar from "@/app/dashboard/components/Sidebar";
 
 interface AdminLayoutProps {
     children: React.ReactNode;

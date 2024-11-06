@@ -3,7 +3,8 @@ import { useRouter } from 'next/navigation';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
-import useAuthStore from '@/store/authStore';
+import { useAuth } from '@/context/AuthContext';
+import { updateProfile } from 'firebase/auth';
 
 interface FormData {
     name: string;
@@ -14,12 +15,10 @@ interface FormData {
 
 export const useRegister = () => {
     const router = useRouter();
-    const loginUser = useAuthStore((state) => state.loginUser);
-    const userStore = useAuthStore((state) => state.user);
+    const { user } = useAuth();
 
     const [
         createUserWithEmailAndPassword,
-        user,
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
@@ -33,10 +32,10 @@ export const useRegister = () => {
     const [errors, setErrors] = useState<string | null>(null);
 
     useEffect(() => {
-        if (userStore || user) {
+        if (user) {
             router.push('/dashboard');
         }
-    }, [userStore, user, router]);
+    }, [user, router]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData(prev => ({
@@ -64,20 +63,24 @@ export const useRegister = () => {
 
 
             if (newUser) {
+                await updateProfile(newUser.user, {
+                    displayName: formData.name,
+                });
+
                 const userData = {
                     uid: newUser.user.uid,
                     name: formData.name,
                     email: formData.email,
                     createdAt: serverTimestamp(),
-                    role: "",  
-                    profilepic: "",  
+                    role: "",
+                    profilepic: "",
                 };
 
                 // Store user data in Firestore
                 await setDoc(doc(firestore, "users", newUser.user.uid), userData);
 
                 // Save user data in Zustand store
-                loginUser(userData);
+                // loginUser(userData);
 
                 // Store user data in localStorage
                 localStorage.setItem("user-info", JSON.stringify(userData));

@@ -1,23 +1,11 @@
 import {
     Package,
-    ChevronDown,
-    Flag,
     Search,
-    Maximize2,
     Bell,
-    Users,
-    Settings,
-    LogOut,
     Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import UserDropdownMenu from "./UserDropdownMenu";
 import LanguageSelector from './LanguageSelector';
 

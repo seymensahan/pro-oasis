@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Product } from '../../../types';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { auth, firestore } from '@/firebase/config';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { ProductDataProps } from '../../../../lib/Types';
+import { useAuth } from '@/context/AuthContext';
 
 const useGetProducts = () => {
     const [products, setProducts] = useState<ProductDataProps[]>([]);
     const [selectedProductData, setSelectedProductData] = useState<ProductDataProps | null>(null);
-    const [user] = useAuthState(auth);
+    const { user } = useAuth();
 
     const productsQuery = user
         ? query(collection(firestore, 'products'), where('owner', '==', user.uid))

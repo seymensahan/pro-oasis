@@ -9,23 +9,23 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogoutButton } from '../../app/(auth)/Hooks/LogoutButton';
-import useAuthStore from '@/store/authStore';
+import { LogoutButton } from '../../(auth)/Hooks/LogoutButton';
+import { useAuth } from '@/context/AuthContext';
 
 const UserDropdownMenu = () => {
-    const user = useAuthStore((state) => state.user)
+    const { user, loading } = useAuth();
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-2">
                     <img
-                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                        alt="User"
+                        src={user?.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
+                        alt={user?.displayName || "User profile"}
                         className="h-8 w-8 rounded-full"
                     />
                     <div className="text-left">
-                        <div className="text-sm font-medium">{user?.name}</div>
+                        <div className="text-sm font-medium">{user?.displayName}</div>
                     </div>
                     <ChevronDown className="h-4 w-4" />
                 </Button>

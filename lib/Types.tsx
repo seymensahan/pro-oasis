@@ -1,3 +1,4 @@
+import { User } from "firebase/auth";
 
 export interface FormSubmitProps {
     onSubmit: (data: Record<string, any>) => void
@@ -49,4 +50,14 @@ export interface CategoryProps {
 export interface UnitProps {
     id?: number;
     name: string;
+}
+
+
+export interface AuthState {
+    user: User | null;
+    loading: boolean;
+    error: Error | null;
+    login: (user: User) => void;
+    logout: () => void;
+    setUser: (user: User | null) => void;
 }

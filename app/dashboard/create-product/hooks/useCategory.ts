@@ -1,22 +1,22 @@
 import { firestore } from '@/firebase/config';
-import useAuthStore from '@/store/authStore';
 import { addDoc, collection, query, serverTimestamp, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { toast } from 'react-toastify';
 import { CategoryProps } from '../../../../lib/Types';
+import { useAuth } from '@/context/AuthContext';
 
 const useCategory = () => {
     const [errors, setErrors] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const user = useAuthStore((state) => state.user)
+    const { user } = useAuth();
     const [category, setCategory] = useState<CategoryProps[]>([]);
 
     // Set up query to fetch customers associated with the authenticated user's store
     const categoryQuery = user
         ? query(
             collection(firestore, 'product-categories'),
-            where('store', '==', user.uid),
+            where('store', '==', user?.uid),
         )
         : null;
 
