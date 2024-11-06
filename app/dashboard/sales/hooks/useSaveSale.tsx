@@ -55,8 +55,9 @@ export const useSaveSale = () => {
                 const saleReference = `SL${Date.now().toString().slice(-4)}`; // Unique sale reference for each product
                 const saleItemDoc = {
                     saleReference,
-                    customerName: saleData.customerName,
-                    invoiceReference,  // Link sale to its invoice
+                    customerName: product.customer,
+                    invoiceReference, 
+                    biller: product.biller,
                     productId: product.id,
                     productName: product.name,
                     quantitySold: product.quantityOrdered,

@@ -8,11 +8,13 @@ interface Product {
 }
 
 export interface SaleProduct extends Product {
-    customer: string
+    customerName: string
     date?: Timestamp | FieldValue
-    product: string
-    quantityOrdered: number
+    productName: string
+    quantitySold: number
     subtotal: number
+    biller?: string
+    saleReference?: string;
 }
 
 
@@ -26,6 +28,6 @@ export interface SaleData {
     due: number
     paymentStatus: 'Paid' | 'Due'
     biller?: string
-    reference?: string
+    saleReference?: string
     date?: Timestamp | FieldValue
 }

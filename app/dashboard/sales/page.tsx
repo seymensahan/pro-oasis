@@ -6,12 +6,12 @@ import SalesSearchAndFilter from '@/app/dashboard/sales/components/SalesSearchAn
 import SalesTable from '@/app/dashboard/sales/components/SalesTable';
 import SalesPagination from '@/app/dashboard/sales/components/SalesPagination';
 import { useSales } from './hooks/useSales';
-import { SaleData } from './types';
+import { SaleData, SaleProduct } from './types';
 
 const SalesList = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [sortField, setSortField] = useState<keyof SaleData>('date');
+    const [sortField, setSortField] = useState<keyof SaleProduct>('date');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
     const itemsPerPage = 10;
     const { sales, loading } = useSales();
@@ -19,21 +19,21 @@ const SalesList = () => {
     // Filtering and sorting logic
     const filteredAndSortedData = sales
         .filter(sale =>
-            sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            sale.reference.toLowerCase().includes(searchTerm.toLowerCase())
+            sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) 
+            // sale.saleReference.toLowerCase().includes(searchTerm.toLowerCase())
         )
-        .sort((a, b) => {
-            if (a[sortField] < b[sortField]) return sortDirection === 'asc' ? -1 : 1;
-            if (a[sortField] > b[sortField]) return sortDirection === 'asc' ? 1 : -1;
-            return 0;
-        });
+        // .sort((a, b) => {
+        //     if (a[sortField] < b[sortField]) return sortDirection === 'asc' ? -1 : 1;
+        //     if (a[sortField] > b[sortField]) return sortDirection === 'asc' ? 1 : -1;
+        //     return 0;
+        // });
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredAndSortedData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage);
 
-    const handleSort = (field: keyof SaleData) => {
+    const handleSort = (field: keyof SaleProduct) => {
         if (field === sortField) {
             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
         } else {
@@ -47,13 +47,13 @@ const SalesList = () => {
             <SalesHeader />
             <SalesSearchAndFilter
                 setSearchTerm={setSearchTerm}
-                sortField={sortField} // Pass sortField as keyof SaleData
+                // sortField={sortField} 
                 sortDirection={sortDirection}
                 onSort={handleSort} // Updated to pass handleSort directly
             />
             <SalesTable
                 salesData={currentItems}
-                sortField={sortField} // Pass sortField as keyof SaleData
+                // sortField={sortField} 
                 sortDirection={sortDirection}
                 onSort={handleSort} // Updated to pass handleSort directly
             />

@@ -29,6 +29,7 @@ const PaymentActions = ({ cart, customer }: PaymentProps) => {
             quantityOrdered: item.quantity, // Quantity ordered in this sale
             subtotal: item.price * item.quantity, // Calculate subtotal
             price: item.price,
+            biller: user?.uid,
         })),
         grandTotal: cart.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate grand total
         status: 'Pending',

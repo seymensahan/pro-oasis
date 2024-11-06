@@ -2,14 +2,14 @@ import React from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Filter, ChevronDown } from 'lucide-react'
-import { SaleData } from '../types';
+import { SaleData, SaleProduct } from '../types';
 
 // Update the interface to include the new props
 interface SalesSearchAndFilterProps {
     setSearchTerm: (term: string) => void;
-    sortField: keyof SaleData; // Update to keyof SaleData
+    sortField?: keyof SaleProduct // Update to keyof SaleData
     sortDirection: 'asc' | 'desc';
-    onSort: (field: keyof SaleData) => void; // Update to keyof SaleData
+    onSort: (field: keyof SaleProduct) => void; // Update to keyof SaleData
 }
 
 
@@ -46,10 +46,10 @@ const SalesSearchAndFilter: React.FC<SalesSearchAndFilterProps> = ({
             <Button variant="outline" size="icon">
                 <Filter className="h-4 w-4 text-blue-500" />
             </Button>
-            <Button variant="outline" onClick={() => onSort(sortField)}>
+            {/* <Button variant="outline" onClick={() => onSort(sortField)}>
                 {sortField.charAt(0).toUpperCase() + sortField.slice(1)}
                 <ChevronDown className={`ml-2 h-4 w-4 ${sortDirection === 'desc' ? 'rotate-180' : ''}`} />
-            </Button>
+            </Button> */}
         </div>
     </div>
 )

@@ -3,17 +3,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { ArrowDownUp, Edit, Eye, MoreVertical, Trash } from 'lucide-react'
-import { SaleData } from '../types'
+import { SaleData, SaleProduct } from '../types'
 import { boolean, number } from 'zod'
 import { Timestamp } from 'firebase/firestore'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import SalesDetail from './SalesDetails'
 
 interface SalesTableProps {
-    salesData: SaleData[];
-    sortField: keyof SaleData; // Update to keyof SaleData
+    salesData: SaleProduct[];
+    sortField?: keyof SaleData; // Update to keyof SaleData
     sortDirection: 'asc' | 'desc';
-    onSort: (field: keyof SaleData) => void; // Update to keyof SaleData
+    onSort: (field: keyof SaleProduct) => void; // Update to keyof SaleData
 }
 
 
@@ -42,7 +42,7 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
-                        <TableHead onClick={() => onSort("reference")} className="cursor-pointer">
+                        <TableHead  className="cursor-pointer">
                             <div className="flex items-center">
                                 <span>Reference</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
@@ -50,31 +50,31 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                         </TableHead>
                         <TableHead onClick={() => onSort("date")} className="cursor-pointer">
                             <div className="flex items-center">
+                                <span>Product</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead  className="cursor-pointer">
+                            <div className="flex items-center">
+                                <span>Quantity Sold</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead className="cursor-pointer">
+                            <div className="flex items-center">
+                                <span>Unit Price</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead  className="cursor-pointer">
+                            <div className="flex items-center">
+                                <span>Total</span>
+                                <ArrowDownUp className="h-4 w-4 ml-1" />
+                            </div>
+                        </TableHead>
+                        <TableHead className="cursor-pointer">
+                            <div className="flex items-center">
                                 <span>Date</span>
-                                <ArrowDownUp className="h-4 w-4 ml-1" />
-                            </div>
-                        </TableHead>
-                        <TableHead onClick={() => onSort("grandTotal")} className="cursor-pointer">
-                            <div className="flex items-center">
-                                <span>Grand Total</span>
-                                <ArrowDownUp className="h-4 w-4 ml-1" />
-                            </div>
-                        </TableHead>
-                        <TableHead onClick={() => onSort("paid")} className="cursor-pointer">
-                            <div className="flex items-center">
-                                <span>Paid</span>
-                                <ArrowDownUp className="h-4 w-4 ml-1" />
-                            </div>
-                        </TableHead>
-                        <TableHead onClick={() => onSort("due")} className="cursor-pointer">
-                            <div className="flex items-center">
-                                <span>Due</span>
-                                <ArrowDownUp className="h-4 w-4 ml-1" />
-                            </div>
-                        </TableHead>
-                        <TableHead onClick={() => onSort("paymentStatus")} className="cursor-pointer">
-                            <div className="flex items-center">
-                                <span>Payment Status</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
@@ -89,20 +89,13 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                     <Checkbox />
                                 </TableCell>
                                 <TableCell className="font-medium">{sale.customerName}</TableCell>
-                                <TableCell>{sale.reference}</TableCell>
-                                <TableCell>{formatDate(sale.date)}</TableCell>
-                                <TableCell>{sale.grandTotal.toFixed(2)} FCFA</TableCell>
-                                <TableCell>{sale.paid.toFixed(2)} FCFA</TableCell>
-                                <TableCell>{sale.due.toFixed(2)} FCFA</TableCell>
+                                <TableCell>{sale.saleReference}</TableCell>
+                                {/* <TableCell>{DateTime.parse(sale.date.toDate().toString())}</TableCell> */}
+                                <TableCell>{sale.productName}</TableCell>
+                                <TableCell>{sale.quantitySold}</TableCell>
+                                <TableCell>{ sale.subtotal / sale.quantitySold } FCFA</TableCell>
                                 <TableCell>
-                                    <span
-                                        className={`flex px-6 py-2 justify-center items-center w-[50%] ml-[20%] rounded-full text-xs ${sale.paymentStatus === 'Paid'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800'
-                                            }`}
-                                    >
-                                        {sale.paymentStatus}
-                                    </span>
+                                        {sale.subtotal} FCFA
                                 </TableCell>
                                 <TableCell>
                                     <Popover>
@@ -130,7 +123,7 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                     </Popover>
 
                                 </TableCell>
-                                <SalesDetail isOpen={saleInfo} onClose={() => setSaleInfo(false)} salesData={sale} />
+                                {/* <SalesDetail isOpen={saleInfo} onClose={() => setSaleInfo(false)} salesData={sale} /> */}
                             </TableRow>
                         ))
                     ) : (
