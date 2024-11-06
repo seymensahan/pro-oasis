@@ -1,19 +1,12 @@
-// Fix for data fetching and table display
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Product } from '../../types';
 import { ProductTable } from '@/app/dashboard/product/components/ProductTable';
 import { SearchAndSort } from '@/app/dashboard/product/components/SearchAndSort';
 import ProductPagination from '@/app/dashboard/product/components/ProductPagination';
 import { ChevronDown, Download, FileUp, Plus, Printer, RefreshCcw, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { collection, query, where, orderBy } from 'firebase/firestore';
-import { auth, firestore } from '@/firebase/config';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import useGetProducts from './hooks/useGetProducts';
 import { ProductDataProps } from '../../../lib/Types';
 
