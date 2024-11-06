@@ -12,6 +12,11 @@ interface NewCustomerModalProps {
 
 const NewCustomerModal = ({ isOpen, onClose }: NewCustomerModalProps) => {
 
+    const handleClosing = () => {
+        onClose()
+    }
+
+    
     if (!isOpen) return null;
 
     return (
@@ -24,7 +29,7 @@ const NewCustomerModal = ({ isOpen, onClose }: NewCustomerModalProps) => {
                     </Button>
                 </div>
                 <div className="p-4 space-y-4">
-                    <CustomerForm />
+                    <CustomerForm onClosing={handleClosing} />
                 </div>
             </div>
         </div>

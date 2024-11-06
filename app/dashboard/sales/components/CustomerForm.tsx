@@ -13,7 +13,7 @@ interface CustomerType {
     tel: string;
 }
 
-const CustomerForm = () => {
+const CustomerForm = ({ onClosing }: any) => {
     const { addCustomer, loading, errors } = useCustomer()
     const [inputs, setInputs] = useState<CustomerType>({
         name: '',
@@ -39,6 +39,8 @@ const CustomerForm = () => {
             email: '',
             tel: ''
         })
+
+        onClosing()
     };
 
     return (

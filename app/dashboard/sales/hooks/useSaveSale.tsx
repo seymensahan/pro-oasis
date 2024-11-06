@@ -1,108 +1,113 @@
-import { firestore } from '@/firebase/config'
-import { collection, doc, setDoc, updateDoc, serverTimestamp, query, where, getDocs, Timestamp } from 'firebase/firestore'
-import { useState } from 'react'
-import { toast } from 'react-toastify'
+import { firestore } from '@/firebase/config';
+import {
+    collection,
+    doc,
+    setDoc,
+    updateDoc,
+    serverTimestamp,
+    query,
+    where,
+    getDocs,
+    Timestamp,
+} from 'firebase/firestore';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { SaleData } from '../types';
 
-interface Product {
-    id: string
-    name: string
-    quantity: number
-    price: number
-}
-
-interface SaleProduct extends Product {
-    customer: string
-    date: Timestamp
-    product: string
-    quantity: number
-    quantityOrdered: number
-    subtotal: number
-}
-
-interface SaleData {
-    customerName: string
-    products: SaleProduct[]
-    grandTotal: number
-    status: 'Completed' | 'Pending'
-    paid: number
-    due: number
-    paymentStatus: 'Paid' | 'Due'
-    biller: string
-    reference?: string
-}
 
 export const useSaveSale = () => {
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const saveSale = async (saleData: SaleData) => {
-        setLoading(true)
-        setError(null)
+        setLoading(true);
+        setError(null);
 
-        console.log("Attempting to save sale with data:", saleData)
+        console.log("Attempting to save sale with data:", saleData);
 
         if (!saleData.customerName || !saleData.products || saleData.products.length === 0) {
-            const errorMsg = 'Sale data is missing required fields (customer name or products list)'
-            setError(errorMsg)
-            toast.error(errorMsg)
-            setLoading(false)
-            return false
+            const errorMsg = 'Sale data is missing required fields (customer name or products list)';
+            setError(errorMsg);
+            toast.error(errorMsg);
+            setLoading(false);
+            return false;
         }
 
         try {
-            // Step 1: Save the sale document
-            const salesRef = collection(firestore, 'sales')
-            const newSaleRef = doc(salesRef)
-            const saleDoc = {
+            // Step 1: Save the main invoice document
+            const invoiceRef = collection(firestore, 'invoices');
+            const newInvoiceRef = doc(invoiceRef);
+            const invoiceReference = `INV${Date.now().toString().slice(-4)}`; // Unique invoice reference
+            const invoiceDoc = {
                 ...saleData,
-                reference: `SL${Date.now().toString().slice(-4)}`,  // Quick reference generation
+                reference: invoiceReference,
                 date: serverTimestamp(),
                 createdAt: serverTimestamp(),
-            }
+            };
 
-            await setDoc(newSaleRef, saleDoc)
-            console.log("Sale document created successfully:", saleDoc)
+            await setDoc(newInvoiceRef, invoiceDoc);
+            console.log("Invoice document created successfully:", invoiceDoc);
 
-            // Step 2: Update product quantities individually
+            // Step 2: Save each product as a separate sale document in the `sales` collection
             for (const product of saleData.products) {
-                const productRef = collection(firestore, "products")
-                const q = query(productRef, where("productName", "==", product.product))
+                const salesRef = collection(firestore, 'sales');
+                const newSaleRef = doc(salesRef);
+                const saleReference = `SL${Date.now().toString().slice(-4)}`; // Unique sale reference for each product
+                const saleItemDoc = {
+                    saleReference,
+                    customerName: saleData.customerName,
+                    invoiceReference,  // Link sale to its invoice
+                    productId: product.id,
+                    productName: product.name,
+                    quantitySold: product.quantityOrdered,
+                    subtotal: product.subtotal,
+                    date: serverTimestamp(),
+                };
+
+                await setDoc(newSaleRef, saleItemDoc);
+                console.log(`Sale document created for product ${product.name}:`, saleItemDoc);
+
+                // Step 3: Update product quantities individually
+                const productRef = collection(firestore, "products");
+                const q = query(productRef, where("name", "==", product.name));
 
                 // Get the current product data to check and update quantity
-                const productSnapshot = await getDocs(q)
+                const productSnapshot = await getDocs(q);
 
                 if (productSnapshot.empty) {
-                    throw new Error(`Product ${product.product} not found in inventory`)
+                    toast.error(`Product ${product.name} not found in inventory`);
+                    return
                 }
 
-                const productDoc = productSnapshot.docs[0] // Assume only one matching product document
-                const currentQuantity = productDoc.data().quantity
+                const productDoc = productSnapshot.docs[0];
+                const currentQuantity = productDoc.data().stock;
 
                 if (currentQuantity < product.quantityOrdered) {
-                    throw new Error(`Insufficient quantity for product ${product.product}`)
+                    toast.error(`Insufficient quantity for product ${product.name}`);
+                    return
                 }
 
                 // Update product quantity
-                const updatedQuantity = currentQuantity - product.quantityOrdered
-                const productDocRef = doc(firestore, "products", productDoc.id)
+                const updatedQuantity = currentQuantity - product.quantityOrdered;
+                const productDocRef = doc(firestore, "products", productDoc.id);
                 await updateDoc(productDocRef, {
-                    quantity: updatedQuantity
-                })
-                console.log(`Updated product ${product.product} with new quantity: ${updatedQuantity}`)
+                    stock: updatedQuantity,
+                });
+                console.log(`Updated product ${product.name} with new quantity: ${updatedQuantity}`);
             }
 
-            // toast.success('Sale saved successfully')
-            return true
+            // toast.success('Invoice and sales saved successfully');
+            return true;
         } catch (err: any) {
-            const errorMessage = `Failed to save sale: ${err.message || 'An error occurred'}`
-            console.error("Error during save:", errorMessage, err)
-            setError(errorMessage)
-            toast.error(errorMessage)
-            return false
+            const errorMessage = `Failed to save sale: ${err.message || 'An error occurred'}`;
+            console.error("Error during save:", errorMessage, err);
+            setError(errorMessage);
+            toast.error(errorMessage);
+            return false;
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
-    return { saveSale, loading, error }
-}
+    return { saveSale, loading, error };
+};

@@ -14,8 +14,8 @@ import { Mail, Printer } from "lucide-react"
 interface SalesConfirmationModalProps {
     isOpen: boolean
     onClose: () => void
-    onEmailInvoice: () => void
-    onPrintInvoice: () => void
+    onEmailInvoice?: () => void
+    onPrintInvoice?: () => void
 }
 
 export default function SalesConfirmationModal({

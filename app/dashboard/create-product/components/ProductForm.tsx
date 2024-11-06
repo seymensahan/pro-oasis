@@ -31,7 +31,7 @@ export default function ProductForm({ onSubmit }: FormSubmitProps) {
     const { images, handleImageRemove, handleImageUpload } = useProduct()
     const { category } = useCategory()
     const { unit } = useUnit()
-    const [productData, setProductData] = useState<ProductDataProps>({
+    const [productData, setProductData] = useState({
         name: '',
         description: '',
         price: 0,

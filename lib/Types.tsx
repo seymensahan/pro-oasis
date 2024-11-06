@@ -25,7 +25,7 @@ export interface ServiceDataProps {
 }
 
 export interface ProductDataProps {
-    id?: string;
+    id: string;
     name: string;
     description?: string;
     price: number;
@@ -34,6 +34,12 @@ export interface ProductDataProps {
     unit: string;
     expirationDate?: Date | null;
     images?: ImageProps[];
+    owner?: string;
+}
+
+
+export interface CartItem extends ProductDataProps {
+    quantity: number
 }
 
 export interface ModalProps {

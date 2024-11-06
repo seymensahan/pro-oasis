@@ -1,24 +1,23 @@
-import { Timestamp } from "firebase/firestore"
+import { FieldValue, Timestamp } from "firebase/firestore"
 
 interface Product {
     id: string
     name: string
-    quantity: number
+    quantity?: number
     price: number
 }
 
 export interface SaleProduct extends Product {
     customer: string
-    date: string
+    date?: Timestamp | FieldValue
     product: string
-    quantity: number
     quantityOrdered: number
     subtotal: number
 }
 
 
 export interface SaleData {
-    id: string
+    id?: string
     customerName: string
     products: SaleProduct[]
     grandTotal: number
@@ -26,7 +25,7 @@ export interface SaleData {
     paid: number
     due: number
     paymentStatus: 'Paid' | 'Due'
-    biller: string
-    reference: string
-    date: Timestamp
+    biller?: string
+    reference?: string
+    date?: Timestamp | FieldValue
 }

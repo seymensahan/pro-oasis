@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Product } from '../../../types';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { auth, firestore } from '@/firebase/config';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { firestore } from '@/firebase/config';
 import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { ProductDataProps } from '../../../../lib/Types';
 import { useAuth } from '@/context/AuthContext';
@@ -16,26 +15,21 @@ const useGetProducts = () => {
         ? query(collection(firestore, 'products'), where('owner', '==', user.uid))
         : null;
 
-    const [productCollection, loading, error] = useCollectionData(productsQuery, {
+    // Use `useCollection` to access document snapshots and IDs
+    const [productSnapshots, loading, error] = useCollection(productsQuery, {
         snapshotListenOptions: { includeMetadataChanges: true },
     });
 
     useEffect(() => {
-        if (productCollection && !loading) {
-            const fetchedProducts = productCollection.map((doc: any) => ({
-                id: doc.id,
-                name: doc.name,
-                owner: doc.userId,
-                category: doc.category,
-                price: doc.price,
-                description: doc.description,
-                unit: doc.unit,
-                stock: doc.stock,
-                images: doc.images || [],
+        if (productSnapshots && !loading) {
+            const fetchedProducts = productSnapshots.docs.map(doc => ({
+                id: doc.id, // Access the document ID here
+                ...doc.data(), // Spread the document data
+                images: doc.data().images || [], // Ensure images is an array
             }));
             setProducts(fetchedProducts as ProductDataProps[]);
         }
-    }, [productCollection, loading]);
+    }, [productSnapshots, loading]);
 
     const getProductByName = async (name: string | null) => {
         try {
