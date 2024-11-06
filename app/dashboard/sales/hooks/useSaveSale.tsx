@@ -55,12 +55,12 @@ export const useSaveSale = () => {
                 const saleReference = `SL${Date.now().toString().slice(-4)}`; // Unique sale reference for each product
                 const saleItemDoc = {
                     saleReference,
-                    customerName: product.customer,
+                    customerName: product.customerName,
                     invoiceReference, 
                     biller: product.biller,
                     productId: product.id,
                     productName: product.name,
-                    quantitySold: product.quantityOrdered,
+                    quantitySold: product.quantitySold,
                     subtotal: product.subtotal,
                     date: serverTimestamp(),
                 };
@@ -83,13 +83,13 @@ export const useSaveSale = () => {
                 const productDoc = productSnapshot.docs[0];
                 const currentQuantity = productDoc.data().stock;
 
-                if (currentQuantity < product.quantityOrdered) {
+                if (currentQuantity < product.quantitySold) {
                     toast.error(`Insufficient quantity for product ${product.name}`);
                     return
                 }
 
                 // Update product quantity
-                const updatedQuantity = currentQuantity - product.quantityOrdered;
+                const updatedQuantity = currentQuantity - product.quantitySold;
                 const productDocRef = doc(firestore, "products", productDoc.id);
                 await updateDoc(productDocRef, {
                     stock: updatedQuantity,

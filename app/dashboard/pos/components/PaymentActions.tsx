@@ -24,9 +24,9 @@ const PaymentActions = ({ cart, customer }: PaymentProps) => {
         products: cart.map((item) => ({
             id: item.id,
             name: item.name,
-            product: item.id,
-            customer: customer,  // Replace with actual customer
-            quantityOrdered: item.quantity, // Quantity ordered in this sale
+            productName: item.id,
+            customerName: customer,  // Replace with actual customer
+            quantitySold: item.quantity, // Quantity ordered in this sale
             subtotal: item.price * item.quantity, // Calculate subtotal
             price: item.price,
             biller: user?.uid,

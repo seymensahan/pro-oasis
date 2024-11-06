@@ -1,4 +1,4 @@
-import { CartItem } from '@/app/types'
+import { CartItem } from '@/lib/Types'
 import React from 'react'
 
 interface OrderSummaryProps {
