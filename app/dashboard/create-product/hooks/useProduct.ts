@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ProductDataProps, ServiceDataProps } from '../../../../lib/Types'
-import { addDoc, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore'
+import { addDoc, and, collection, getDocs, query, serverTimestamp, where } from 'firebase/firestore'
 import { firestore, storage } from '@/firebase/config'
 import { toast } from 'react-toastify'
 import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
@@ -108,7 +108,11 @@ const useProduct = () => {
             setProductLoading(true)
             setProductError(null)
 
-            const q = query(collection(firestore, "products"), where("name", "==", productData.name));
+            const q = query(
+                collection(firestore, "products"),
+                where("name", "==", productData.name),
+                where("owner", "==", user?.uid)  
+            );
             const querySnapshot = await getDocs(q)
 
             if (!querySnapshot.empty) {
