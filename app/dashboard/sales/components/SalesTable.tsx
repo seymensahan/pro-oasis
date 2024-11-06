@@ -7,7 +7,7 @@ import { SaleData, SaleProduct } from '../types'
 import { boolean, number } from 'zod'
 import { Timestamp } from 'firebase/firestore'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import SalesDetail from './SalesDetails'
+// import SalesDetail from './SalesDetails'
 
 interface SalesTableProps {
     salesData: SaleProduct[];
