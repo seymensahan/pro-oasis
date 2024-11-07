@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3, DollarSign, FileText, LineChart, Package, PieChart } from "lucide-react";
 import Link from "next/link";
-import HomeHeader from "@/components/HomeHeader";
+import HomeHeader from "./HomeHeader";
 
 
 // Type definitions for props
