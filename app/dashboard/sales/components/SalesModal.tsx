@@ -18,6 +18,7 @@ import { auth } from '@/firebase/config'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { toast } from 'react-toastify'
 import SalesConfirmationModal from './SalesConfirmation'
+import { Timestamp } from 'firebase/firestore'
 
 interface SalesModalProps {
     isOpen: boolean
@@ -57,6 +58,7 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
             grandTotal,
             status: 'Pending' as const,
             paid: 0,
+            date: Timestamp.fromDate(new Date()),
             due: grandTotal,
             paymentStatus: 'Due' as const,
             biller: user?.uid || 'unknown',
