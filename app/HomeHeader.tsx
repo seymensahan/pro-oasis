@@ -1,13 +1,11 @@
 "use client"
 
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
+import { PieChart } from 'lucide-react';
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
-import { Button } from './ui/button'
-import { PieChart } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { auth } from '@/firebase/config'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { useAuth } from '@/context/AuthContext'
 
 const HomeHeader = () => {
     const { user, loading } = useAuth();
