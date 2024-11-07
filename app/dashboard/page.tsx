@@ -47,7 +47,6 @@ export default function Dashboard() {
             <div className="max-w-7xl mx-auto py-2 sm:px-6 lg:px-4">
                 <div className="px-4 py-6 sm:px-0">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome back, {user?.displayName}</h1>
-
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         <Card className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

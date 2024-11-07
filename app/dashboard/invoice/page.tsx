@@ -20,7 +20,10 @@ import {
 } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, Search, Filter } from 'lucide-react'
-import InvoiceDetailModal from '@/components/invoice/InvoiceDetailModal'
+import InvoiceDetailModal from '@/app/dashboard/invoice/components/InvoiceDetailModal'
+import useInvoice from './hooks/useInvoice'
+import formatDate from '@/lib/FormatDate'
+import { SaleData } from '../sales/types'
 
 interface InvoiceItem {
     description: string
@@ -77,10 +80,11 @@ const mockInvoices: Invoice[] = [
 ]
 
 export default function InvoiceListPage() {
-    const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null)
+    const { invoices, loading } = useInvoice()
+    const [selectedInvoice, setSelectedInvoice] = useState<SaleData | null>(null)
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
 
-    const openDetailModal = (invoice: Invoice) => {
+    const openDetailModal = (invoice: SaleData) => {
         setSelectedInvoice(invoice)
         setIsDetailModalOpen(true)
     }
@@ -127,23 +131,27 @@ export default function InvoiceListPage() {
                                 <TableHead>Customer Name</TableHead>
                                 <TableHead>Date</TableHead>
                                 <TableHead>Amount</TableHead>
+                                <TableHead>Paid</TableHead>
+                                <TableHead>Due</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {mockInvoices.map((invoice) => (
+                            {invoices.map((invoice) => (
                                 <TableRow key={invoice.id}>
-                                    <TableCell>{invoice.id}</TableCell>
+                                    <TableCell>{invoice.reference}</TableCell>
                                     <TableCell>{invoice.customerName}</TableCell>
-                                    <TableCell>{invoice.date}</TableCell>
-                                    <TableCell>${invoice.amount.toFixed(2)}</TableCell>
+                                    <TableCell>{formatDate(invoice.date)}</TableCell>
+                                    <TableCell>{invoice.grandTotal} FCFA</TableCell>
+                                    <TableCell>{invoice.paid} FCFA</TableCell>
+                                    <TableCell>{invoice.due} FCFA</TableCell>
                                     <TableCell>
-                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${invoice.status === 'Paid' ? 'bg-green-100 text-green-800' :
-                                                invoice.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                    'bg-red-100 text-red-800'
+                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${invoice.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800' :
+                                            invoice.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                'bg-red-100 text-red-800'
                                             }`}>
-                                            {invoice.status}
+                                            {invoice.paymentStatus}
                                         </span>
                                     </TableCell>
                                     <TableCell>

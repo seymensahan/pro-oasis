@@ -9,9 +9,10 @@ interface Product {
 
 export interface SaleProduct extends Product {
     customerName: string
-    date?: Timestamp | FieldValue
+    date: Timestamp | null
     productName: string
-    quantitySold: number
+    // quantitySold: number
+    quantityOrdered: number
     subtotal: number
     biller?: string
     saleReference?: string;
@@ -27,7 +28,8 @@ export interface SaleData {
     paid: number
     due: number
     paymentStatus: 'Paid' | 'Due'
+    reference?: string;
     biller?: string
     saleReference?: string
-    date?: Timestamp | FieldValue
+    date: Timestamp | null
 }

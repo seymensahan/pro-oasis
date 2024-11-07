@@ -7,6 +7,7 @@ import { SaleData, SaleProduct } from '../types'
 import { boolean, number } from 'zod'
 import { Timestamp } from 'firebase/firestore'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import formatDate from '@/lib/FormatDate'
 // import SalesDetail from './SalesDetails'
 
 interface SalesTableProps {
@@ -16,14 +17,6 @@ interface SalesTableProps {
     onSort: (field: keyof SaleProduct) => void; // Update to keyof SaleData
 }
 
-
-const formatDate = (timestamp: Timestamp): string => {
-    const date = timestamp.toDate();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-};
 
 const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirection, onSort }) => {
     const [saleInfo, setSaleInfo] = useState(false)
@@ -90,10 +83,10 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 </TableCell>
                                 <TableCell className="font-medium">{sale.customerName}</TableCell>
                                 <TableCell>{sale.saleReference}</TableCell>
-                                {/* <TableCell>{DateTime.parse(sale.date.toDate().toString())}</TableCell> */}
+                                <TableCell>{formatDate(sale.date)}</TableCell>
                                 <TableCell>{sale.productName}</TableCell>
-                                <TableCell>{sale.quantitySold}</TableCell>
-                                <TableCell>{ sale.subtotal / sale.quantitySold } FCFA</TableCell>
+                                <TableCell>{sale.quantityOrdered}</TableCell>
+                                <TableCell>{ sale.subtotal / sale.quantityOrdered } FCFA</TableCell>
                                 <TableCell>
                                         {sale.subtotal} FCFA
                                 </TableCell>

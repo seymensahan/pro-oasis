@@ -4,7 +4,7 @@ import { CreditCard, QrCode } from 'lucide-react'
 import { CartItem } from '@/lib/Types'
 import { useSaveSale } from '../../sales/hooks/useSaveSale'
 import { SaleData } from '../../sales/types'
-import { serverTimestamp } from 'firebase/firestore'
+import { serverTimestamp, Timestamp } from 'firebase/firestore'
 import { useAuth } from '@/context/AuthContext'
 import { toast } from 'react-toastify'
 import SalesConfirmationModal from '../../sales/components/SalesConfirmation'
@@ -26,13 +26,15 @@ const PaymentActions = ({ cart, customer }: PaymentProps) => {
             name: item.name,
             productName: item.id,
             customerName: customer,  // Replace with actual customer
-            quantitySold: item.quantity, // Quantity ordered in this sale
+            quantityOrdered: item.quantity, // Quantity ordered in this sale
             subtotal: item.price * item.quantity, // Calculate subtotal
+            date: item.expirationDate ? Timestamp.fromDate(new Date(item.expirationDate)) : null, // Corrected date handling
             price: item.price,
             biller: user?.uid,
         })),
         grandTotal: cart.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate grand total
         status: 'Pending',
+        date: Timestamp.fromDate(new Date()),
         paid: 0,
         due: cart.reduce((total, item) => total + item.price * item.quantity, 0), // Due is initially the grand total
         paymentStatus: 'Due',
