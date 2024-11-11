@@ -1,4 +1,4 @@
-import { BarChart2, Box, Briefcase, CirclePercent, FileText, Layers, LayoutDashboard, NotepadText, Package, PieChart, ReceiptText, ShoppingCart, ShoppingCartIcon, Tag } from 'lucide-react'
+import { BarChart2, Box, Briefcase, CirclePercent, FileText, HandPlatter, Layers, LayoutDashboard, NotepadText, Package, PieChart, ReceiptText, ShoppingCart, ShoppingCartIcon, Tag } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -16,16 +16,9 @@ const sidebarData = [
         title: "Inventory",
         items: [
             { icon: Package, label: "Products", href: "/dashboard/product" },
-            { icon: Box, label: "Create Product", href: "/dashboard/create-product" },
+            { icon: HandPlatter, label: "Services", href: "/dashboard/services" },
             { icon: FileText, label: "Expired Products", href: "/expired-products" },
             { icon: BarChart2, label: "Low Stocks", href: "/low-stocks" },
-        ],
-    },
-    {
-        title: "Store",
-        items: [
-            { icon: Package, label: "Manage Stock", href: "/dashboard/stock" },
-            { icon: NotepadText, label: "Stock Adjustment", href: "/dashboard/stock-ajustment" },
         ],
     },
     {
@@ -34,6 +27,13 @@ const sidebarData = [
             { icon: ShoppingCartIcon, label: "Sales", href: "/dashboard/sales" },
             { icon: ReceiptText, label: "Invoice", href: "/dashboard/invoice" },
             { icon: CirclePercent, label: "POS", href: "/dashboard/pos" },
+        ],
+    },
+    {
+        title: "Store",
+        items: [
+            { icon: Package, label: "Manage Stock", href: "/dashboard/stock" },
+            // { icon: NotepadText, label: "Stock Adjustment", href: "/dashboard/stock-ajustment" },
         ],
     },
 ];

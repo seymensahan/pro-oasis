@@ -74,11 +74,13 @@ const useProduct = () => {
             }
         }
     };
-
+    
     const addService = async (serviceData: ServiceDataProps) => {
-
+        
+        const serviceReference = `SRV${Date.now().toString().slice(-4)}`; 
         const serviceSaveData = {
             ...serviceData,
+            reference: serviceReference,
             createdAt: serverTimestamp(),
             owner: user?.uid
         }
@@ -98,8 +100,10 @@ const useProduct = () => {
     }
 
     const addProduct = async (productData: ProductDataProps) => {
+        const productReference = `PDT${Date.now().toString().slice(-4)}`; 
         const productSaveData = {
             ...productData,
+            reference: productReference,
             createdAt: serverTimestamp(),
             owner: user?.uid,
         }

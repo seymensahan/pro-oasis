@@ -37,7 +37,7 @@ export const useSaveSale = () => {
             // Step 1: Save the main invoice document
             const invoiceRef = collection(firestore, 'invoices');
             const newInvoiceRef = doc(invoiceRef);
-            const invoiceReference = `INV${Date.now().toString().slice(-4)}`; // Unique invoice reference
+            const invoiceReference = `INV${Date.now().toString().slice(-4)}`; 
             const invoiceDoc = {
                 ...saleData,
                 reference: invoiceReference,

@@ -3,20 +3,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye, Pencil, Trash2 } from 'lucide-react';
-import { ProductDataProps } from '@/lib/Types';
-import Link from 'next/link'; // Import Link from Next.js
-import useGetProducts from '../hooks/useGetProducts';
+import { ServiceDataProps } from '@/lib/Types';
+import Link from 'next/link';
 
-interface ProductTableProps {
-    products: ProductDataProps[];
+interface ServiceTableProps {
+    services: ServiceDataProps[];
 }
 
-export const ProductTable = ({ products } : ProductTableProps) => {
-    const { deleteProductByName } = useGetProducts()
 
-    const deleteProduct = async (id: string) => {
-        await deleteProductByName(id)
-    }
+export const ServiceTable = ({ services }: ServiceTableProps) => {
+
 
     return (
         <Table>
@@ -32,6 +28,24 @@ export const ProductTable = ({ products } : ProductTableProps) => {
                             <ArrowUpDown className="ml-2 h-4 w-4" />
                         </div>
                     </TableHead>
+                    {/* <TableHead>
+                        <div className="flex items-center">
+                            requirements
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
+                    </TableHead> */}
+                    <TableHead>
+                        <div className="flex items-center">
+                            Duration
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
+                    </TableHead>
+                    <TableHead>
+                        <div className="flex items-center">
+                            Delivery Method
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
+                    </TableHead>
                     <TableHead>
                         <div className="flex items-center">
                             Price
@@ -40,19 +54,7 @@ export const ProductTable = ({ products } : ProductTableProps) => {
                     </TableHead>
                     <TableHead>
                         <div className="flex items-center">
-                            Unit
-                            <ArrowUpDown className="ml-2 h-4 w-4" />
-                        </div>
-                    </TableHead>
-                    <TableHead>
-                        <div className="flex items-center">
-                            Qty
-                            <ArrowUpDown className="ml-2 h-4 w-4" />
-                        </div>
-                    </TableHead>
-                    <TableHead>
-                        <div className="flex items-center">
-                            Description
+                            Availiability
                             <ArrowUpDown className="ml-2 h-4 w-4" />
                         </div>
                     </TableHead>
@@ -60,34 +62,35 @@ export const ProductTable = ({ products } : ProductTableProps) => {
                 </TableRow>
             </TableHeader>
             <TableBody className="space-y-5">
-                {products.map((product) => (
-                    <TableRow key={product.id}>
+                {services.map((service) => (
+                    <TableRow key={service.id}>
                         <TableCell>
                             <Checkbox />
                         </TableCell>
                         <TableCell className="font-medium">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={product?.images?.[0]?.url || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
-                                    alt={product?.name || "Product Image"}
+                                    src={service?.images?.[0]?.url || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
+                                    alt={service?.name || "Product Image"}
                                     className="h-10 w-10 rounded-full"
                                 />
-                                <span>{product.name}</span>
+                                <span>{service.name}</span>
                             </div>
                         </TableCell>
-                        <TableCell>{product.category}</TableCell>
-                        <TableCell>{product.price} FCFA</TableCell>
-                        <TableCell>{product.unit}</TableCell>
-                        <TableCell>{product.stock}</TableCell>
-                        <TableCell>
+                        <TableCell>{service.category}</TableCell>
+                        {/* <TableCell>
                             <div className="flex items-center space-x-2">
-                                <span>{product.description}</span>
+                                <span>{service.requirements}</span>
                             </div>
-                        </TableCell>
+                        </TableCell> */}
+                        <TableCell>{service.duration} Hrs</TableCell>
+                        <TableCell>{service.deliveryMethod}</TableCell>
+                        <TableCell>{service.price} FCFA</TableCell>
+                        <TableCell>{service.availability}</TableCell>
                         <TableCell>
                             <div className="flex space-x-2">
                                 {/* Wrap "View" button in Link for routing */}
-                                <Link href={`./product/${encodeURIComponent(product.name)}`}>
+                                <Link href={`./product/${encodeURIComponent(service.name)}`}>
                                     <Button variant="ghost" size="icon">
                                         <Eye className="h-4 w-4" />
                                     </Button>

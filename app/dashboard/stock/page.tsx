@@ -19,17 +19,12 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowUpDown, ChevronLeft, ChevronRight, FileText, Filter, Printer, RefreshCw, Search } from 'lucide-react'
-import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import useGetProducts from '../product/hooks/useGetProducts'
+import formatDate from '@/lib/FormatDate'
+import { ProductDataProps } from '@/lib/Types'
+import StockDetailsModal from './components/StockDetailsModal'
 
 interface StockItem {
     id: number
@@ -70,10 +65,12 @@ const stockMovements: StockMovement[] = [
 ]
 
 export default function StockManagement() {
-    const [selectedProduct, setSelectedProduct] = useState<StockItem | null>(null)
+    const [selectedProduct, setSelectedProduct] = useState<ProductDataProps | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const { products, loading, error } = useGetProducts()
 
-    const openModal = (product: StockItem) => {
+
+    const openModal = (product: ProductDataProps) => {
         setSelectedProduct(product)
         setIsModalOpen(true)
     }
@@ -160,17 +157,17 @@ export default function StockManagement() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {stockData.map((item) => (
+                            {products.map((item) => (
                                 <TableRow key={item.id}>
                                     <TableCell>
                                         <Checkbox />
                                     </TableCell>
-                                    <TableCell className="font-medium">{item.product}</TableCell>
+                                    <TableCell className="font-medium">{item.name}</TableCell>
                                     <TableCell>{item.reference}</TableCell>
-                                    <TableCell>{item.date}</TableCell>
-                                    <TableCell>{item.quantity}</TableCell>
-                                    <TableCell>{item.unitPrice.toLocaleString()} FCFA</TableCell>
-                                    <TableCell>{item.totalAmount.toLocaleString()} FCFA</TableCell>
+                                    <TableCell>{formatDate(item.createdAt)}</TableCell>
+                                    <TableCell>{item.stock}</TableCell>
+                                    <TableCell>{item.price} FCFA</TableCell>
+                                    <TableCell>{item.stock * item.price} FCFA</TableCell>
                                     <TableCell>
                                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => openModal(item)}>
                                             <span className="sr-only">Voir détails</span>
@@ -207,162 +204,7 @@ export default function StockManagement() {
                     </nav>
                 </div>
             </div>
-
-            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold">
-                            Fiche de Stock: {selectedProduct?.product || 'Produit non sélectionné'}
-                        </DialogTitle>
-                    </DialogHeader>
-                    {selectedProduct ? (
-                        <div className="mt-4 space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Informations Générales</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p><strong>Référence:</strong> {selectedProduct?.reference}</p>
-                                        <p><strong>Stock initial:</strong> {selectedProduct?.quantity}</p>
-                                        <p><strong>Coût d'achat moyen:</strong> {selectedProduct?.unitPrice.toLocaleString()} FCFA</p>
-                                        <p><strong>Prix de vente moyen:</strong> {(selectedProduct?.unitPrice * 1.2).toLocaleString()} FCFA</p>
-                                    </CardContent>
-                                </Card>
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>Statistiques</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p><strong>Total des entrées:</strong> {stockMovements.reduce((sum, movement) => sum + movement.entryQty, 0)}</p>
-                                        <p><strong>Total des sorties:</strong> {stockMovements.reduce((sum, movement) => sum + movement.exitQty, 0)}</p>
-                                        <p><strong>Total des avaries:</strong> {stockMovements.reduce((sum, movement) => sum + movement.damageQty, 0)}</p>
-                                        <p><strong>Solde actuel:</strong> {stockMovements[stockMovements.length - 1].balance}</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            <Tabs defaultValue="movements">
-                                <TabsList className="grid w-full grid-cols-3">
-                                    <TabsTrigger value="movements">Mouvements de Stock</TabsTrigger>
-                                    <TabsTrigger value="chart">Graphique</TabsTrigger>
-                                    <TabsTrigger value="analysis">Analyse</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="movements">
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>Mouvements de Stock</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <Table>
-                                                <TableHeader>
-                                                    <TableRow>
-                                                        <TableHead>Date</TableHead>
-                                                        <TableHead>Référence</TableHead>
-                                                        <TableHead>Libellé</TableHead>
-                                                        <TableHead>Entrées Qté</TableHead>
-                                                        <TableHead>Entrées Montant</TableHead>
-                                                        <TableHead>Sorties Qté</TableHead>
-                                                        <TableHead>Sorties Montant</TableHead>
-                                                        <TableHead>Avaries Qté</TableHead>
-                                                        <TableHead>Avaries Montant</TableHead>
-                                                        <TableHead>Solde</TableHead>
-                                                    </TableRow>
-                                                </TableHeader>
-                                                <TableBody>
-                                                    {stockMovements.map((movement, index) => (
-                                                        <TableRow key={index}>
-                                                            <TableCell>{movement.date}</TableCell>
-                                                            <TableCell>{movement.reference}</TableCell>
-                                                            <TableCell>{movement.description}</TableCell>
-                                                            <TableCell>{movement.entryQty}</TableCell>
-
-                                                            <TableCell>{movement.entryAmount.toLocaleString()}</TableCell>
-                                                            <TableCell>{movement.exitQty}</TableCell>
-                                                            <TableCell>{movement.exitAmount.toLocaleString()}</TableCell>
-                                                            <TableCell>{movement.damageQty}</TableCell>
-                                                            <TableCell>{movement.damageAmount.toLocaleString()}</TableCell>
-                                                            <TableCell>{movement.balance}</TableCell>
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </CardContent>
-                                    </Card>
-                                </TabsContent>
-                                <TabsContent value="chart">
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>Graphique des Mouvements de Stock</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <ChartContainer
-                                                config={{
-                                                    balance: {
-                                                        label: "Solde",
-                                                        color: "hsl(var(--chart-1))",
-                                                    },
-                                                    entries: {
-                                                        label: "Entrées",
-                                                        color: "hsl(var(--chart-2))",
-                                                    },
-                                                    exits: {
-                                                        label: "Sorties",
-                                                        color: "hsl(var(--chart-3))",
-                                                    },
-                                                }}
-                                                className="h-[400px]"
-                                            >
-                                                <ResponsiveContainer width="100%" height="100%">
-                                                    <LineChart data={stockMovements}>
-                                                        <CartesianGrid strokeDasharray="3 3" />
-                                                        <XAxis dataKey="date" />
-                                                        <YAxis />
-                                                        <ChartTooltip content={<ChartTooltipContent />} />
-                                                        <Legend />
-                                                        <Line type="monotone" dataKey="balance" stroke="var(--color-balance)" name="Solde" />
-                                                        <Line type="monotone" dataKey="entryQty" stroke="var(--color-entries)" name="Entrées" />
-                                                        <Line type="monotone" dataKey="exitQty" stroke="var(--color-exits)" name="Sorties" />
-                                                    </LineChart>
-                                                </ResponsiveContainer>
-                                            </ChartContainer>
-                                        </CardContent>
-                                    </Card>
-                                </TabsContent>
-                                <TabsContent value="analysis">
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>Analyse du Stock</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <h3 className="text-lg font-semibold">Taux de rotation du stock</h3>
-                                                    <p>Le taux de rotation du stock est de {calculateTurnoverRate(stockMovements)}. Ce chiffre indique combien de fois le stock a été vendu et remplacé sur la période donnée.</p>
-                                                </div>
-                                                <div>
-                                                    <h3 className="text-lg font-semibold">Ventes moyennes journalières</h3>
-                                                    <p>Les ventes moyennes journalières sont de {calculateAverageDailySales(stockMovements)} unités. Cette information peut aider à prévoir les besoins futurs en stock.</p>
-                                                </div>
-                                                <div>
-                                                    <h3 className="text-lg font-semibold">Recommandations</h3>
-                                                    <ul className="list-disc list-inside space-y-2">
-                                                        <li>Surveillez de près les produits à faible rotation pour éviter le surstockage.</li>
-                                                        <li>Envisagez d'augmenter les commandes pour les produits à forte rotation afin d'éviter les ruptures de stock.</li>
-                                                        <li>Analysez les tendances saisonnières pour ajuster les niveaux de stock en conséquence.</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </TabsContent>
-                            </Tabs>
-                        </div>
-                    ) : (
-                        <p>Veuillez sélectionner un produit pour voir les détails.</p>
-                    )}
-                </DialogContent>
-            </Dialog>
+            <StockDetailsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} products={selectedProduct}  />
         </div>
     )
 }

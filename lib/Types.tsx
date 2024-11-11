@@ -1,4 +1,5 @@
 import { User } from "firebase/auth";
+import { Timestamp } from "firebase/firestore";
 
 export interface FormSubmitProps {
     onSubmit: (data: Record<string, any>) => void
@@ -26,9 +27,12 @@ export interface ServiceDataProps {
 
 export interface ProductDataProps {
     id: string;
+    reference?: string;
     name: string;
     description?: string;
     price: number;
+    purchasePrice?: number;
+    createdAt: Timestamp; 
     category: string;
     stock: number;
     unit: string;
@@ -67,3 +71,4 @@ export interface AuthState {
     logout: () => void;
     setUser: (user: User | null) => void;
 }
+

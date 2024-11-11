@@ -14,6 +14,7 @@ import {
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { ArrowUpRight, DollarSign, Users, ShoppingCart, ChevronRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import DashboardStats from './components/DashboardStats'
 
 const salesData = [
     { name: 'Jan', sales: 200, purchase: 120 },
@@ -37,8 +38,16 @@ const bestSellers = [
     { id: 3, name: 'Nike Jordan', price: 8784, sales: 1478, image: '/placeholder.svg?height=50&width=50' },
 ]
 
+const stats =[
+    { title: "Total Revenue", amount: 12231, progress: "+20.1% from last month", icon: DollarSign},
+    { title: "New Customers", amount: 2345, progress: "+15.3% from last month", icon: Users},
+    { title: "Total Orders", amount: 5678, progress: "+12.7% from last month", icon: ShoppingCart},
+    { title: "Total Sales", amount: 21456, progress: "+18.2% from last month", icon: ArrowUpRight},
+]
+
 export default function Dashboard() {
     const { user } = useAuth();
+
 
     console.log("user info: ", user)
 
@@ -48,46 +57,10 @@ export default function Dashboard() {
                 <div className="px-4 py-6 sm:px-0">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome back, {user?.displayName}</h1>
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                        <Card className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                                <DollarSign className="h-4 w-4 text-purple-100" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">45,231.89 FCFA</div>
-                                <p className="text-xs text-purple-100">+20.1% from last month</p>
-                            </CardContent>
-                        </Card>
-                        <Card className="bg-gradient-to-br from-pink-500 to-rose-600 text-white">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">New Customers</CardTitle>
-                                <Users className="h-4 w-4 text-pink-100" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">2,345</div>
-                                <p className="text-xs text-pink-100">+15.3% from last month</p>
-                            </CardContent>
-                        </Card>
-                        <Card className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-                                <ShoppingCart className="h-4 w-4 text-yellow-100" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">5,678</div>
-                                <p className="text-xs text-yellow-100">+12.7% from last month</p>
-                            </CardContent>
-                        </Card>
-                        <Card className="bg-gradient-to-br from-green-400 to-emerald-600 text-white">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
-                                <ArrowUpRight className="h-4 w-4 text-green-100" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">21,456.78 FCFA</div>
-                                <p className="text-xs text-green-100">+18.2% from last month</p>
-                            </CardContent>
-                        </Card>
+                        {stats.map((stat, index) => (
+                            <DashboardStats title={stat.title} amount={stat.amount} progress={stat.progress} icon={<stat.icon />} />
+                        ))}
+                    
                     </div>
 
                     <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">

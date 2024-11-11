@@ -35,6 +35,7 @@ export default function ProductForm({ onSubmit }: FormSubmitProps) {
         name: '',
         description: '',
         price: 0,
+        purchasePrice: 0,
         category: '',
         unit: '',
         stock: 0,
@@ -133,7 +134,19 @@ export default function ProductForm({ onSubmit }: FormSubmitProps) {
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="product-price">Price *</Label>
+                            <Label htmlFor="product-price">Purchase Price *</Label>
+                            <Input
+                                id="product-price"
+                                type="number"
+                                placeholder="Enter price"
+                                name="purchasePrice"
+                                value={productData.purchasePrice}
+                                onChange={handleInpuChange}
+                                required />
+                        </div>
+                        
+                        <div className="space-y-2">
+                            <Label htmlFor="product-price">Unit Price *</Label>
                             <Input
                                 id="product-price"
                                 type="number"
@@ -143,6 +156,7 @@ export default function ProductForm({ onSubmit }: FormSubmitProps) {
                                 onChange={handleInpuChange}
                                 required />
                         </div>
+
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
