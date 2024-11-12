@@ -9,6 +9,9 @@ import { AuthProvider } from "@/context/AuthContext";
 export const metadata: Metadata = {
   title: "Pro Oasis",
   description: "The super manager you always wanted",
+  icons: {
+    icon: "/ProOasis-logo.webp",
+  },
 };
 
 export default function RootLayout({
