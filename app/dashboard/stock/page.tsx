@@ -26,15 +26,6 @@ import formatDate from '@/lib/FormatDate'
 import { ProductDataProps } from '@/lib/Types'
 import StockDetailsModal from './components/StockDetailsModal'
 
-interface StockItem {
-    id: number
-    product: string
-    reference: string
-    date: string
-    quantity: number
-    unitPrice: number
-    totalAmount: number
-}
 
 interface StockMovement {
     date: string
@@ -49,12 +40,7 @@ interface StockMovement {
     balance: number
 }
 
-const stockData: StockItem[] = [
-    { id: 1, product: "Coca Cola Pack de 6 (1L)", reference: "COCA COLA 1L PET", date: "25 Jul 2023", quantity: 3894, unitPrice: 2809, totalAmount: 10937806 },
-    { id: 2, product: "Fanta Orange 1.5L", reference: "FANTA 1.5L PET", date: "28 Jul 2023", quantity: 2500, unitPrice: 2500, totalAmount: 6250000 },
-    { id: 3, product: "Sprite 2L", reference: "SPRITE 2L PET", date: "24 Jul 2023", quantity: 1800, unitPrice: 3000, totalAmount: 5400000 },
-    { id: 4, product: "Schweppes Tonic 33cl", reference: "SCHWEPPES 33CL", date: "15 Jul 2023", quantity: 5000, unitPrice: 1500, totalAmount: 7500000 },
-]
+
 
 const stockMovements: StockMovement[] = [
     { date: "12/04/2023", reference: "CDC PACK 6", description: "Stock initial", entryQty: 3894, entryAmount: 14433468, exitQty: 0, exitAmount: 0, damageQty: 0, damageAmount: 0, balance: 3894 },

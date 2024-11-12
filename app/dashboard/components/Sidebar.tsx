@@ -1,4 +1,4 @@
-import { BarChart2, Box, Briefcase, CirclePercent, FileText, HandPlatter, Layers, LayoutDashboard, NotepadText, Package, PieChart, ReceiptText, ShoppingCart, ShoppingCartIcon, Tag } from 'lucide-react'
+import { CirclePercent, Container, FileChartPie, HandPlatter, LayoutDashboard, Package, PieChart, ReceiptText, ShoppingCartIcon, Tag } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -16,9 +16,10 @@ const sidebarData = [
         title: "Inventory",
         items: [
             { icon: Package, label: "Products", href: "/dashboard/product" },
+            { icon: Container, label: "Supply", href: "/dashboard/supplies" },
+            { icon: Container, label: "Supplier", href: "/dashboard/suppliers" },
             { icon: HandPlatter, label: "Services", href: "/dashboard/services" },
-            { icon: FileText, label: "Expired Products", href: "/expired-products" },
-            { icon: BarChart2, label: "Low Stocks", href: "/low-stocks" },
+            { icon: FileChartPie, label: "Appointements", href: "/dashboard/appointement" },
         ],
     },
     {

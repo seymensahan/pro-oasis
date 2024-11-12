@@ -23,7 +23,7 @@ export const useSaveSale = () => {
         setLoading(true);
         setError(null);
 
-        console.log("Attempting to save sale with data:", saleData);
+        // console.log("Attempting to save sale with data:", saleData);
 
         if (!saleData.customerName || !saleData.products || saleData.products.length === 0) {
             const errorMsg = 'Sale data is missing required fields (customer name or products list)';
@@ -45,7 +45,7 @@ export const useSaveSale = () => {
             };
 
             await setDoc(newInvoiceRef, invoiceDoc);
-            console.log("Invoice document created successfully:", invoiceDoc);
+            // console.log("Invoice document created successfully:", invoiceDoc);
 
             // Step 2: Save each product as a separate sale document in the `sales` collection
             for (const product of saleData.products) {
@@ -64,7 +64,7 @@ export const useSaveSale = () => {
                 };
 
                 await setDoc(newSaleRef, saleItemDoc);
-                console.log(`Sale document created for product ${product.name}:`, saleItemDoc);
+                // console.log(`Sale document created for product ${product.name}:`, saleItemDoc);
 
                 // Step 3: Update product quantities individually
                 const productRef = collection(firestore, "products");
@@ -92,14 +92,14 @@ export const useSaveSale = () => {
                 await updateDoc(productDocRef, {
                     stock: updatedQuantity,
                 });
-                console.log(`Updated product ${product.name} with new quantity: ${updatedQuantity}`);
+                // console.log(`Updated product ${product.name} with new quantity: ${updatedQuantity}`);
             }
 
             // toast.success('Invoice and sales saved successfully');
             return true;
         } catch (err: any) {
             const errorMessage = `Failed to save sale: ${err.message || 'An error occurred'}`;
-            console.error("Error during save:", errorMessage, err);
+            // console.error("Error during save:", errorMessage, err);
             setError(errorMessage);
             toast.error(errorMessage);
             return false;

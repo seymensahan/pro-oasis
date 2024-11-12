@@ -70,7 +70,7 @@ const StockDetailsModal = ({ isOpen, onClose, products }: StockModalProps) => {
                                                 <TableRow>
                                                     <TableHead>Date</TableHead>
                                                     <TableHead>Reference</TableHead>
-                                                    <TableHead>Wording</TableHead>
+                                                    <TableHead>Type</TableHead>
                                                     <TableHead>Entries Qty</TableHead>
                                                     <TableHead>Entries Amount</TableHead>
                                                     <TableHead>Outputs Qty</TableHead>

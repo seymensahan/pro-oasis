@@ -103,6 +103,7 @@ const useProduct = () => {
         const productReference = `PDT${Date.now().toString().slice(-4)}`; 
         const productSaveData = {
             ...productData,
+            stockInitial: productData.stock,
             reference: productReference,
             createdAt: serverTimestamp(),
             owner: user?.uid,

@@ -31,16 +31,30 @@ const useGetProducts = () => {
         }
     }, [productSnapshots, loading]);
 
-    const getProductByName = async (name: string | null) => {
+    const getProductByName = async (name: string | null): Promise<ProductDataProps | null> => {
+        if (!name) return null;  // Ensure name is provided
+    
         try {
-            const q = query(collection(firestore, "products"), where("name", "==", name));
+            const q = query(
+                collection(firestore, "products"),
+                where("name", "==", name),
+                where("owner", "==", user?.uid)
+            );
             const querySnapshot = await getDocs(q);
+    
+            if (querySnapshot.empty) {
+                return null;  // Return null if no product is found
+            }
+    
             const product = querySnapshot.docs[0]?.data() ?? null;
             setSelectedProductData(product as ProductDataProps);
+            return product as ProductDataProps;
         } catch (error: any) {
             console.error("Error fetching product:", error.message);
+            return null;  // Return null on error to indicate failure
         }
     };
+    
 
     const deleteProductByName = async (name: string) => {
         try {
