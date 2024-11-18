@@ -2,24 +2,18 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from 'next/link'
-import { useLogin } from '@/app/(auth)/Hooks/useLogin'
-import { Loader2 } from "lucide-react"
+import { AlertCircle, Loader2, User } from "lucide-react"
+import { useFormState, useFormStatus } from "react-dom"
+import { login } from "@/app/actions/auth"
+import { useState } from "react"
 
 export function LoginForm() {
-    const {
-        email,
-        setEmail,
-        password,
-        setPassword,
-        showPassword,
-        setShowPassword,
-        error,
-        loading,
-        handleLogin,
-    } = useLogin();
+    const [state, action, isPending] = useFormState(login, undefined)
+
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form action={action} className="space-y-4">
             {/* {error && <p className="text-red-500 text-sm">{error.message}</p>} */}
             <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
@@ -28,25 +22,10 @@ export function LoginForm() {
                         id="email"
                         placeholder="Enter your email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        name="email"
                         required
                     />
-                    <svg
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <rect height="16" rx="2" width="20" x="2" y="4" />
-                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
+                    <User className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
             </div>
             <div className="space-y-2">
@@ -56,8 +35,7 @@ export function LoginForm() {
                         id="password"
                         placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
                         required
                     />
                     <svg
@@ -89,9 +67,41 @@ export function LoginForm() {
                     </svg>
                 </div>
             </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-400" type="submit">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Sign In'}
-            </Button>
+            <SubmitButton />
+            {state?.message && (
+                <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50" role="alert">
+                    <AlertCircle className="flex-shrink-0 inline w-4 h-4 mr-3" />
+                    <span className="sr-only">Error</span>
+                    <div>
+                        <span className="font-medium">Registration failed!, password should be:</span>
+                        {/* {state.errors.password.map((error) => ( */}
+                            <li>{state.message}</li>
+                        {/* ))} */}
+                    </div>
+                </div>
+            )}
         </form>
+    )
+}
+
+
+export function SubmitButton() {
+    const { pending } = useFormStatus()
+
+    return (
+        <Button
+            className={`w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-150 ${pending && "opacity-75 cursor-not-allowed"
+                }`}
+            type="submit"
+            disabled={pending}
+        >
+            {pending ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                </>
+            ) : (
+                <>Sign Up</>
+            )}
+        </Button>
     )
 }

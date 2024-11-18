@@ -49,8 +49,6 @@ export default function Dashboard() {
     const { user } = useAuth();
 
 
-    console.log("user info: ", user)
-
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="max-w-7xl mx-auto py-2 sm:px-6 lg:px-4">

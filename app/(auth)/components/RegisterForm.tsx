@@ -2,98 +2,103 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { User, Mail, Loader2 } from 'lucide-react'
-import { useRegister } from '@/app/(auth)/Hooks/useRegister'
+import { User, Mail, Loader2, AlertCircle } from 'lucide-react'
+import { useFormState, useFormStatus } from 'react-dom'
+import { signup } from '@/app/actions/auth'
 
 export default function RegisterForm() {
+    const [state, action] = useFormState(signup, undefined)
     const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const { formData, errors, loading, error, handleInputChange, handleSubmit } = useRegister()
 
     return (
-        <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+        <form className='my-5 space-y-5' action={action}>
+
+            <div className="space-y-2 ">
+                <Label htmlFor="name" className="font-medium text-gray-700">Name</Label>
                 <div className="relative">
                     <Input
                         id="name"
                         placeholder="Enter your name"
-                        value={formData.name}
-                        onChange={handleInputChange}
+                        name='name'
+                        className="pr-10"
                     />
                     <User className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
+                {state?.errors?.name && <p className="text-sm text-red-500 mt-1">{state.errors.name}</p>}
             </div>
+
             <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="font-medium text-gray-700">Email</Label>
                 <div className="relative">
                     <Input
                         id="email"
                         placeholder="Enter your email"
                         type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
+                        name='email'
+                        className="pr-10"
                     />
                     <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
             </div>
+
             <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="font-medium text-gray-700">Password</Label>
                 <div className="relative">
                     <Input
                         id="password"
                         placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
                         name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
+                        className="pr-10"
                     />
                     <PasswordToggleIcon show={showPassword} onClick={() => setShowPassword(!showPassword)} />
                 </div>
             </div>
-            <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
-                    <Input
-                        id="confirmPassword"
-                        placeholder="Confirm your password"
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                    />
-                    <PasswordToggleIcon show={showConfirmPassword} onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
+
+            <SubmitButton />
+
+            {state?.errors?.password && (
+                <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50" role="alert">
+                    <AlertCircle className="flex-shrink-0 inline w-4 h-4 mr-3" />
+                    <span className="sr-only">Error</span>
+                    <div>
+                        <span className="font-medium">Registration failed!, password should be:</span>
+                        {state.errors.password.map((error) => (
+                            <li key={error}>{error}</li>
+                        ))}
+                    </div>
                 </div>
-            </div>
-            <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
-                <label htmlFor="terms" className="text-sm font-medium">
-                    I agree to the Terms & Privacy
-                </label>
-            </div>
-            <div className="flex w-full justify-center items-center">
-                {errors && <p className="text-lg text-red-600">{errors}</p>}
-                {/* {error && <p className="text-lg text-red-600">{error.message}</p>} */}
-            </div>
-            <Button className="w-full bg-blue-500 hover:bg-blue-400" type="submit">
-                {loading ? (
-                    <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Please wait
-                    </>
-                ) : (
-                    <>Sign Up</>
-                )}
-            </Button>
+            )}
         </form>
+    )
+}
+
+export function SubmitButton() {
+    const { pending } = useFormStatus()
+
+    return (
+        <Button
+            className={`w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-150 ${pending && "opacity-75 cursor-not-allowed"
+                }`}
+            type="submit"
+            disabled={pending}
+        >
+            {pending ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                </>
+            ) : (
+                <>Sign Up</>
+            )}
+        </Button>
     )
 }
 
 const PasswordToggleIcon = ({ show, onClick }: { show: boolean; onClick: () => void }) => (
     <svg
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 cursor-pointer"
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 cursor-pointer hover:text-gray-600 transition duration-150"
         onClick={onClick}
         fill="none"
         stroke="currentColor"
