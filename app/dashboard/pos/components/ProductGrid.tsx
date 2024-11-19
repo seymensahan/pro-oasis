@@ -1,24 +1,51 @@
-import React from 'react'
-import { Card, CardContent } from "@/components/ui/card"
-import { ProductDataProps } from '@/lib/Types'
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { ProductDataProps } from '@/lib/Types';
 
 interface ProductGridProps {
-    products: ProductDataProps[]
-    selectedCategory: string
-    addToCart: (product: ProductDataProps) => void
+    products: ProductDataProps[];
+    addToCart: (product: ProductDataProps) => void;
 }
 
-const ProductGrid = ({ products, selectedCategory, addToCart }: ProductGridProps) => (
-    <div className="flex-1 p-4">
-        <h1 className="font-bold text-2xl mb-4">Products</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-            {products
-                .filter(
-                    product =>
-                        selectedCategory === 'all' ||
-                        product.category.toLowerCase() === selectedCategory
+const ProductGrid = ({ products, addToCart }: ProductGridProps) => {
+    const [filteredProducts, setFilteredProducts] = useState<ProductDataProps[]>(products);
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+    // Handle category filtering
+    useEffect(() => {
+        if (selectedCategory === 'all') {
+            setFilteredProducts(products);
+        } else {
+            setFilteredProducts(
+                products.filter((product) =>
+                    product.category.toLowerCase() === selectedCategory.toLowerCase()
                 )
-                .map(product => (
+            );
+        }
+    }, [selectedCategory, products]);
+
+    return (
+        <div className="flex-1 p-4">
+            <h1 className="font-bold text-2xl mb-4">Products</h1>
+
+            {/* Category Filter */}
+            <div className="mb-4">
+                <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="p-2 border border-gray-300 rounded"
+                >
+                    <option value="all">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="home">Home</option>
+                </select>
+            </div>
+
+            {/* Product Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
                     <Card
                         key={product.id}
                         className="cursor-pointer h-54 flex flex-col justify-between shadow-lg rounded-lg overflow-hidden"
@@ -42,9 +69,9 @@ const ProductGrid = ({ products, selectedCategory, addToCart }: ProductGridProps
                         </CardContent>
                     </Card>
                 ))}
+            </div>
         </div>
-    </div>
+    );
+};
 
-)
-
-export default ProductGrid
+export default ProductGrid;

@@ -24,10 +24,10 @@ const OrderList: React.FC<OrderListProps> = ({ cart, updateQuantity, removeFromC
                         <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className='text-xs'>
                     {cart.map(item => (
-                        <TableRow key={item.id}>
-                            <TableCell>{item.name}</TableCell>
+                        <TableRow key={item.id} >
+                            <TableCell >{item.name}</TableCell>
                             <TableCell>
                                 <Input
                                     type="number"

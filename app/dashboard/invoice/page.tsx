@@ -119,7 +119,7 @@ export default function InvoiceListPage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Button>
+                        <Button className='bg-blue-400 hover:bg-blue-500'>
                             <Filter className="mr-2 h-4 w-4" />
                             Advanced Filters
                         </Button>

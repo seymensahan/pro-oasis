@@ -1,7 +1,7 @@
 
 import { auth, firestore } from "@/firebase/config";
 import { FormState, LoginFormSchema, SignupFormSchema } from "@/lib/definitions"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, getIdToken, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
@@ -26,6 +26,13 @@ export async function signup(state: FormState, formData: FormData) {
     const { name, email, password } = validatedFields.data
 
     const newUser = await createUserWithEmailAndPassword(auth, email, password);
+    const user = newUser.user;
+
+        // Get the user's ID token
+        const token = await getIdToken(user, true);
+
+        // Set the token as a secure cookie
+        document.cookie = `auth-token=${token}; path=/; secure; samesite=strict`;
 
     if (newUser) {
         await updateProfile(newUser.user, {
@@ -70,8 +77,15 @@ export async function login(state: FormState, formData: FormData) {
     const { email, password } = validatedFields.data
 
     try {
-        
-        const user = await signInWithEmailAndPassword(auth, email, password);
+
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Get the user's ID token
+        const token = await getIdToken(user, true);
+
+        // Set the token as a secure cookie
+        document.cookie = `auth-token=${token}; path=/; secure; samesite=strict`;
 
         if (user) {
             // const userData = user.data();

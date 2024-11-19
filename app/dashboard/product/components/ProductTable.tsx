@@ -11,12 +11,19 @@ interface ProductTableProps {
     products: ProductDataProps[];
 }
 
-export const ProductTable = ({ products } : ProductTableProps) => {
+export const ProductTable = async ({ products } : ProductTableProps) => {
     const { deleteProductByName } = useGetProducts()
 
     const deleteProduct = async (id: string) => {
         await deleteProductByName(id)
     }
+
+    // let product: ProductTableProps[] = []
+    // const response = await fetch(`${process.env.API_URL}/api/products`)
+    // if (response.ok) {
+    //     const productJson = await response.json();
+    //     if (productJson && productJson.length > 0) product = productJson;
+    // }
 
     return (
         <Table>
@@ -25,7 +32,9 @@ export const ProductTable = ({ products } : ProductTableProps) => {
                     <TableHead className="w-12">
                         <Checkbox />
                     </TableHead>
-                    <TableHead>Product</TableHead>
+                    <TableHead>   
+                        
+                        Product</TableHead>
                     <TableHead>
                         <div className="flex items-center">
                             Category

@@ -1,4 +1,4 @@
-import { CirclePercent, Container, FileChartPie, HandPlatter, LayoutDashboard, Package, PieChart, ReceiptText, ShoppingCartIcon, Tag } from 'lucide-react'
+import { CirclePercent, Container, FileChartPie, HandPlatter, LayoutDashboard, Package, PackagePlus, PieChart, ReceiptText, ShoppingCartIcon, Store, Tag, User } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -8,7 +8,7 @@ const sidebarData = [
         title: "Main",
         items: [
             { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-            // { icon: PieChart, label: "Admin Dashboard", href: "/admin-dashboard" },
+            { icon: Store, label: "Stores", href: "/dashboard/stores" },
             // { icon: BarChart2, label: "Sales Dashboard", href: "/sales-dashboard" },
         ],
     },
@@ -17,7 +17,7 @@ const sidebarData = [
         items: [
             { icon: Package, label: "Products", href: "/dashboard/product" },
             { icon: Container, label: "Supply", href: "/dashboard/supplies" },
-            { icon: Container, label: "Supplier", href: "/dashboard/suppliers" },
+            { icon: PackagePlus, label: "Supplier", href: "/dashboard/suppliers" },
             { icon: HandPlatter, label: "Services", href: "/dashboard/services" },
             { icon: FileChartPie, label: "Appointements", href: "/dashboard/appointement" },
         ],
@@ -37,11 +37,18 @@ const sidebarData = [
             // { icon: NotepadText, label: "Stock Adjustment", href: "/dashboard/stock-ajustment" },
         ],
     },
+    {
+        title: "Human ressources",
+        items: [
+            { icon: User, label: "Employees", href: "/dashboard/employees" },
+            // { icon: NotepadText, label: "Stock Adjustment", href: "/dashboard/stock-ajustment" },
+        ],
+    },
 ];
 
 const Sidebar = () => {
     return (
-        <aside className="w-64 bg-white shadow-md overflow-y-auto">
+        <aside className="w-45 bg-white shadow-md overflow-y-auto">
             <div className="p-4">
                 <Link href="/" className="flex items-center space-x-2">
                     <PieChart className="h-8 w-8 text-blue-600" />

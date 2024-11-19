@@ -33,11 +33,11 @@ const PaymentActions = ({ cart, customer }: PaymentProps) => {
             biller: user?.uid,
         })),
         grandTotal: cart.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate grand total
-        status: 'Pending',
+        status: 'Completed',
         date: Timestamp.fromDate(new Date()),
-        paid: 0,
+        paid: cart.reduce((total, item) => total + item.price * item.quantity, 0),
         due: cart.reduce((total, item) => total + item.price * item.quantity, 0), // Due is initially the grand total
-        paymentStatus: 'Due',
+        paymentStatus: 'Paid',
         biller: user?.uid,
     };
 

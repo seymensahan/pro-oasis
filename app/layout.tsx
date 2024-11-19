@@ -3,6 +3,7 @@ import "./globals.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/protectedRoutes";
 
 
 
@@ -25,8 +26,10 @@ export default function RootLayout({
       <body>
         {/* <PrivateRoute> */}
         <AuthProvider>
-          <ToastContainer />
-          {children}
+          <ProtectedRoute>
+            <ToastContainer />
+            {children}
+          </ProtectedRoute>
         </AuthProvider>
         {/* </PrivateRoute> */}
       </body>
