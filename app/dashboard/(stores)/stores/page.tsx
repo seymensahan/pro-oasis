@@ -24,9 +24,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import StoreModal from './components/StoreModal'
 
 
-interface Store {
+export interface Store {
     id: number;
     name: string;
     description: string;
@@ -104,60 +105,7 @@ export default function StoreManagement() {
                             <Plus className="mr-2 h-4 w-4" /> Add New Store
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>{editingStore ? 'Edit Store' : 'Create New Store'}</DialogTitle>
-                            <DialogDescription>
-                                {editingStore ? 'Make changes to your store here.' : 'Add the details of your new store here.'}
-                            </DialogDescription>
-                        </DialogHeader>
-                        <form onSubmit={handleSubmit}>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="name" className="text-right">
-                                        Name
-                                    </Label>
-                                    <Input
-                                        id="name"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleInputChange}
-                                        className="col-span-3"
-                                        required
-                                    />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="description" className="text-right">
-                                        Description
-                                    </Label>
-                                    <Textarea
-                                        id="description"
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleInputChange}
-                                        className="col-span-3"
-                                        required
-                                    />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="address" className="text-right">
-                                        Address
-                                    </Label>
-                                    <Input
-                                        id="address"
-                                        name="address"
-                                        value={formData.address}
-                                        onChange={handleInputChange}
-                                        className="col-span-3"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button className='bg-blue-400 hover:bg-blue-500' type="submit">{editingStore ? 'Save Changes' : 'Create Store'}</Button>
-                            </DialogFooter>
-                        </form>
-                    </DialogContent>
+                    <StoreModal editingStore={editingStore}/>
                 </Dialog>
             </div>
 
@@ -167,7 +115,7 @@ export default function StoreManagement() {
                         <div className="flex justify-center items-center mt-5">
                             <img
                                 src="/ProOasis-logo.webp"
-                                className="w-auto h-20 rounded-full" 
+                                className="w-auto h-20 rounded-full"
                                 alt="Store logo"
                             />
                         </div>

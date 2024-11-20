@@ -23,7 +23,7 @@ import useCategory from "../hooks/useCategory"
 import NewUnitModal from "./NewUnitModal"
 import useUnit from "../hooks/useUnit"
 
-export default function ProductForm({ onSubmit }: FormSubmitProps) {
+export default function zProductForm({ onSubmit }: FormSubmitProps) {
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
     const [isUnitModalOpen, setIsUnitModalOpen] = useState(false)
     const router = useRouter()
