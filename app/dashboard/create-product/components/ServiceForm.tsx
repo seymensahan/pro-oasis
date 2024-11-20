@@ -5,17 +5,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Form } from "react-hook-form";
-import { Loader, Loader2, Upload } from "lucide-react";
+import { Loader, Loader2, Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { storage } from "@/firebase/config";
 import { FormSubmitProps } from "../../../../lib/Types";
 import { Progress } from "@/components/ui/progress";
 import useProduct from "../hooks/useProduct";
+import useCategory from "../hooks/useCategory";
+import NewCategoryModal from "./NewCategoryModal";
 
 export default function ServiceForm({ onSubmit }: FormSubmitProps) {
     const router = useRouter();
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
     const { serviceLoading, handleImageRemove, handleImageUpload, images } = useProduct()
+    const { category } = useCategory()
 
     const [serviceData, setServiceData] = useState({
         name: '',
@@ -27,6 +31,10 @@ export default function ServiceForm({ onSubmit }: FormSubmitProps) {
         deliveryMethod: '',
         requirements: ''
     });
+
+    const onOpenCategoryModal = () => {
+        setIsCategoryModalOpen(true)
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -92,20 +100,32 @@ export default function ServiceForm({ onSubmit }: FormSubmitProps) {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
+                        
                         <div className="space-y-2">
-                            <Label htmlFor="service-category">Category *</Label>
-                            <Select name="category" onValueChange={handleSelectChange('category')} required>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select category" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="web-development">Web Development</SelectItem>
-                                    <SelectItem value="consulting">Consulting</SelectItem>
-                                    <SelectItem value="design">Design</SelectItem>
-                                    <SelectItem value="accounting">Accounting & Tax</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <Label htmlFor="product-category">Category *</Label>
+                            <div className="flex items-center">
+                                <Select name="category" onValueChange={handleSelectChange('category')} required>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {category?.map((category) => (
+                                            <SelectItem key={category.id} value={category.name}>
+                                                {category.name}
+                                            </SelectItem>
+                                        ))}
+                                        <SelectItem value="web-development">Web Development</SelectItem>
+                                        <SelectItem value="consulting">Consulting</SelectItem>
+                                        <SelectItem value="design">Design</SelectItem>
+                                        <SelectItem value="accounting">Accounting & Tax</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <Button variant="ghost" size="icon" className="ml-2" onClick={onOpenCategoryModal}>
+                                    <Plus className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </div>
+
                         <div className="space-y-2">
                             <Label htmlFor="service-price">Price *</Label>
                             <Input
@@ -221,6 +241,7 @@ export default function ServiceForm({ onSubmit }: FormSubmitProps) {
                     )}
                 </Button>
             </div>
+            <NewCategoryModal isOpen={isCategoryModalOpen} onClose={() => setIsCategoryModalOpen(false)} />
         </>
     );
 }

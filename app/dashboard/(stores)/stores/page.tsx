@@ -1,7 +1,7 @@
 'use client'
 
-import { FormEventHandler, useState } from 'react'
-import { Plus, Store, Edit, Trash2, User } from 'lucide-react'
+import { useState, FormEvent } from 'react'
+import { Plus, Store, Edit2, User, UserPlus, MapPin, X } from 'lucide-react'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,19 +19,26 @@ import {
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
-    CardTitle,
 } from "@/components/ui/card"
 import StoreModal from './components/StoreModal'
-
+import { Badge } from '@/components/ui/badge'
+import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export interface Store {
     id: number;
     name: string;
     description: string;
     address: string;
+    logo: string;
+    managers: Manager[];
+    isActive: boolean;
+}
+
+interface Manager {
+    name: string;
+    role: string;
 }
 
 interface FormData {
@@ -40,112 +47,330 @@ interface FormData {
     address: string;
 }
 
-// Mock data for existing stores
-const initialStores = [
-    { id: 1, name: "Downtown Boutique", description: "Fashion store in the heart of the city", address: "123 Main St, Cityville" },
-    { id: 2, name: "Tech Haven", description: "Latest gadgets and electronics", address: "456 Innovation Ave, Techtown" },
+const availableManagers = [
+    "Jean Claude",
+    "Marie Smith",
+    "John Doe",
+    "Sarah Johnson"
+]
+
+// Available roles
+const roles = [
+    "Store Manager",
+    "Assistant Manager",
+    "Shift Supervisor",
+    "Sales Associate"
+]
+
+const initialStores: Store[] = [
+    {
+        id: 1,
+        name: "Downtown Boutique",
+        description: "Fashion store in the heart of the city",
+        address: "123 Main St, Cityville",
+
+        
+        logo: "/ProOasis-logo.webp",
+        managers: [
+            { name: "Jean Claude", role: "Store Manager" },
+            { name: "Marie Smith", role: "Assistant Manager" }
+        ],
+        isActive: true
+    },
+    {
+        id: 2,
+        name: "Tech Haven",
+        description: "Latest gadgets and electronics",
+        address: "456 Innovation Ave, Techtown",
+        logo: "/ProOasis-logo.webp",
+        managers: [
+            { name: "John Doe", role: "Store Manager" }
+        ],
+        isActive: true
+    }
 ]
 
 export default function StoreManagement() {
-    const [stores, setStores] = useState(initialStores)
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [editingStore, setEditingStore] = useState<Store>()
-    const [formData, setFormData] = useState({
+    const [stores, setStores] = useState<Store[]>(initialStores)
+    const [isNewStoreOpen, setIsNewStoreOpen] = useState(false)
+    const [isManagerDialogOpen, setIsManagerDialogOpen] = useState(false)
+    const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false)
+    const [selectedStore, setSelectedStore] = useState<Store | null>(null)
+    const [selectedManager, setSelectedManager] = useState<Manager | null>(null)
+    const [isEditMode, setIsEditMode] = useState(false)
+    const [formData, setFormData] = useState<FormData>({
         name: '',
         description: '',
         address: '',
     })
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value
-        }))
-    }
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleStoreSubmit = (e: FormEvent) => {
         e.preventDefault()
-        if (editingStore) {
+        if (isEditMode && selectedStore) {
             setStores(stores.map(store =>
-                store.id === editingStore.id ? { ...store, ...formData } : store
+                store.id === selectedStore.id
+                    ? { ...store, ...formData }
+                    : store
             ))
         } else {
-            const newStore = {
+            const newStore: Store = {
                 id: stores.length + 1,
-                ...formData
+                ...formData,
+                logo: "/placeholder.svg",
+                managers: [],
+                isActive: true
             }
             setStores([...stores, newStore])
         }
-        setIsDialogOpen(false)
-        setEditingStore(undefined)
+        setIsNewStoreOpen(false)
         setFormData({ name: '', description: '', address: '' })
+        setIsEditMode(false)
     }
 
-    const handleEdit = (store: Store) => {
-        setEditingStore(store)
-        setFormData(store)
-        setIsDialogOpen(true)
+    const handleEditStore = (store: Store) => {
+        setSelectedStore(store)
+        setFormData({
+            name: store.name,
+            description: store.description,
+            address: store.address,
+        })
+        setIsEditMode(true)
+        setIsNewStoreOpen(true)
     }
 
-    const handleDelete = (id: number) => {
-        setStores(stores.filter(store => store.id !== id))
+    const handleAddManager = (store: Store) => {
+        setSelectedStore(store)
+        setIsManagerDialogOpen(true)
+    }
+
+    const handleManagerSelect = (managerName: string) => {
+        if (selectedStore) {
+            setStores(stores.map(store =>
+                store.id === selectedStore.id
+                    ? { ...store, managers: [...store.managers, { name: managerName, role: "Sales Associate" }] }
+                    : store
+            ))
+        }
+        setIsManagerDialogOpen(false)
+    }
+
+    const handleRemoveManager = (storeId: number, managerName: string) => {
+        setStores(stores.map(store =>
+            store.id === storeId
+                ? { ...store, managers: store.managers.filter(m => m.name !== managerName) }
+                : store
+        ))
+    }
+
+    const handleRoleChange = (store: Store, manager: Manager) => {
+        setSelectedStore(store)
+        setSelectedManager(manager)
+        setIsRoleDialogOpen(true)
+    }
+
+    const handleRoleSelect = (role: string) => {
+        if (selectedStore && selectedManager) {
+            setStores(stores.map(store =>
+                store.id === selectedStore.id
+                    ? {
+                        ...store,
+                        managers: store.managers.map(m =>
+                            m.name === selectedManager.name ? { ...m, role } : m
+                        )
+                    }
+                    : store
+            ))
+        }
+        setIsRoleDialogOpen(false)
+    }
+
+    const toggleStoreActivity = (storeId: number) => {
+        setStores(stores.map(store =>
+            store.id === storeId
+                ? { ...store, isActive: !store.isActive }
+                : store
+        ))
     }
 
     return (
         <div className="container mx-auto p-6 max-w-6xl">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Manage Your Stores</h1>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <Dialog open={isNewStoreOpen} onOpenChange={setIsNewStoreOpen}>
                     <DialogTrigger asChild>
-                        <Button className=' bg-blue-400 hover:bg-blue-500' onClick={() => {
-                            setEditingStore(undefined)
-                            setFormData({ name: '', description: '', address: '' })
-                        }}>
+                        <Button
+                            className="bg-blue-400 hover:bg-blue-500"
+                            onClick={() => {
+                                setSelectedStore(null)
+                                setFormData({ name: '', description: '', address: '' })
+                            }}
+                        >
                             <Plus className="mr-2 h-4 w-4" /> Add New Store
                         </Button>
                     </DialogTrigger>
-                    <StoreModal editingStore={editingStore}/>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>{isEditMode ? "Edit Store" : "New Store"}</DialogTitle>
+                        </DialogHeader>
+                        <form onSubmit={handleStoreSubmit}>
+                            <div>
+                                <Label htmlFor="name">Store Name</Label>
+                                <Input
+                                    id="name"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="description">Description</Label>
+                                <Textarea
+                                    id="description"
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="address">Address</Label>
+                                <Input
+                                    id="address"
+                                    value={formData.address}
+                                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                />
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit">{isEditMode ? "Save Changes" : "Add Store"}</Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
                 </Dialog>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
                 {stores.map((store) => (
-                    <Card key={store.id}>
-                        <div className="flex justify-center items-center mt-5">
-                            <img
-                                src="/ProOasis-logo.webp"
-                                className="w-auto h-20 rounded-full"
-                                alt="Store logo"
-                            />
-                        </div>
-                        <CardHeader>
-                            <CardTitle className="flex items-center">
-                                <Store className="mr-2 h-4 w-4" />
-                                {store.name}
-                            </CardTitle>
-                            <CardDescription>{store.description}</CardDescription>
-                            <CardDescription>{store.address}</CardDescription>
+                    <Card key={store.id} className={`overflow-hidden ${store.isActive ? '' : 'opacity-60'}`}>
+                        <CardHeader className="border-b bg-muted/50 p-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-16 w-16 rounded-lg overflow-hidden">
+                                        <img
+                                            src={store.logo}
+                                            alt={store.name}
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl font-semibold flex items-center gap-2">
+                                            <Store className="h-5 w-5" />
+                                            {store.name}
+                                        </h2>
+                                        <p className="text-sm text-muted-foreground">{store.description}</p>
+                                    </div>
+                                </div>
+                                <Switch
+                                    checked={store.isActive}
+                                    onCheckedChange={() => toggleStoreActivity(store.id)}
+                                    aria-label="Toggle store activity"
+                                />
+                            </div>
                         </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-bold">Managers</p>
-                            <Card className='flex items-center space-x-2 p-1 rounded-lg w-[30%] text-sm'>
-                                <User className='w-4 h-4' />
-                                <p>Jean Claude</p>
-                            </Card>
+                        <CardContent className="p-4 space-y-4">
+                            <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                <span>{store.address}</span>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Managers</h3>
+                                <div className="space-y-2">
+                                    {store.managers.map((manager) => (
+                                        <Badge key={manager.name} variant="secondary" className="flex items-center gap-2 w-fit">
+                                            <User className="h-3 w-3" />
+                                            {manager.name} - {manager.role}
+                                            <button
+                                                onClick={() => handleRoleChange(store, manager)}
+                                                className="ml-1 hover:text-primary"
+                                            >
+                                                <Edit2 className="h-3 w-3" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleRemoveManager(store.id, manager.name)}
+                                                className="ml-1 hover:text-destructive"
+                                            >
+                                                <X className="h-3 w-3" />
+                                            </button>
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2 pt-2 ">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleAddManager(store)}
+                                >
+                                    <UserPlus className="mr-2 h-4 w-4" /> Add Manager
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleEditStore(store)}
+                                >
+                                    <Edit2 className="mr-2 h-4 w-4" /> Edit Store
+                                </Button>
+                            </div>
                         </CardContent>
-                        <CardFooter className="flex justify-end space-x-2">
-                            <Button variant="outline" size="sm" onClick={() => handleEdit(store)}>
-                                <User className="mr-2 h-4 w-4" /> Add a manager
-                            </Button>
-                            <Button variant="outline" size="sm" onClick={() => handleEdit(store)}>
-                                <Edit className="mr-2 h-4 w-4" /> Edit
-                            </Button>
-                        </CardFooter>
                     </Card>
                 ))}
             </div>
 
+            <Dialog open={isManagerDialogOpen} onOpenChange={setIsManagerDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Add Manager</DialogTitle>
+                        <DialogDescription>
+                            Select a manager to add to this store.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <Select onValueChange={handleManagerSelect}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a manager" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {availableManagers
+                                .filter(manager => !selectedStore?.managers.some(m => m.name === manager))
+                                .map((manager) => (
+                                    <SelectItem key={manager} value={manager}>
+                                        {manager}
+                                    </SelectItem>
+                                ))}
+                        </SelectContent>
+                    </Select>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Change Role</DialogTitle>
+                        <DialogDescription>
+                            Select a new role for {selectedManager?.name}.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <Select onValueChange={handleRoleSelect}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {roles.map((role) => (
+                                <SelectItem key={role} value={role}>
+                                    {role}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
