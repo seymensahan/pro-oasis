@@ -103,9 +103,9 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
                                         <TableRow key={index}>
                                             <TableCell>{item.name}</TableCell>
                                             <TableCell className="text-right">{item.quantityOrdered}</TableCell>
-                                            <TableCell className="text-right">{item.price.toFixed(2)} FCFA</TableCell>
+                                            <TableCell className="text-right">{item.price} FCFA</TableCell>
                                             <TableCell className="text-right">
-                                                {(item.price * item.quantityOrdered).toFixed(2)} FCFA
+                                                {(item.price * item.quantityOrdered)} FCFA
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -119,16 +119,16 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
                         <div className="w-1/2 space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <span>Subtotal:</span>
-                                <span>{subtotal.toFixed(2)} FCFA</span>
+                                <span>{subtotal} FCFA</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Tax (3%):</span>
-                                <span>{tax.toFixed(2)} FCFA</span>
+                                <span>{tax} FCFA</span>
                             </div>
                             <Separator />
                             <div className="flex justify-between font-semibold text-sm">
                                 <span>Total:</span>
-                                <span>{total.toFixed(2)} FCFA</span>
+                                <span>{total} FCFA</span>
                             </div>
                         </div>
                     </div>

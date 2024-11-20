@@ -77,7 +77,7 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                 <TableBody>
                     {salesData.length > 0 ? (
                         salesData.map((sale) => (
-                            <TableRow key={sale.id}>
+                            <TableRow key={sale.id} className='text-sm'>
                                 <TableCell>
                                     <Checkbox />
                                 </TableCell>
@@ -98,18 +98,14 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="p-2 w-100 ">
-                                            <div className="flex flex-col space-y-2">
+                                            <div className="flex flex-col space-y-2 text-xs">
                                                 <button className="flex items-center space-x-2 hover:bg-blue-100 p-2 rounded" onClick={() => setSaleInfo(true)}>
-                                                    <Eye className="h-4 w-4" />
+                                                    <Eye className="h-3 w-3" />
                                                     <span>Sale Details</span>
                                                 </button>
                                                 <button className="flex items-center space-x-2 hover:bg-blue-100 p-2 rounded">
-                                                    <Edit className="h-4 w-4" />
+                                                    <Edit className="h-3 w-3" />
                                                     <span>Edit Payment</span>
-                                                </button>
-                                                <button className="flex items-center space-x-2 hover:bg-red-100 p-2 rounded">
-                                                    <Trash className="h-4 w-4" />
-                                                    <span>Delete Sale</span>
                                                 </button>
                                             </div>
                                         </PopoverContent>

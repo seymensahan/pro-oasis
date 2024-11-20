@@ -1,4 +1,4 @@
-import { CirclePercent, Container, FileChartPie, HandPlatter, LayoutDashboard, Package, PackagePlus, PieChart, ReceiptText, ShoppingCartIcon, Store, Tag, User } from 'lucide-react'
+import { CirclePercent, Contact, Container, FileChartPie, HandPlatter, LayoutDashboard, Package, PackagePlus, PieChart, ReceiptText, ShoppingCartIcon, Store, Tag, User } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -13,35 +13,41 @@ const sidebarData = [
         ],
     },
     {
-        title: "Inventory",
+        title: "Product",
         items: [
-            { icon: Package, label: "Products", href: "/dashboard/product" },
-            { icon: Container, label: "Supply", href: "/dashboard/supplies" },
-            { icon: PackagePlus, label: "Supplier", href: "/dashboard/suppliers" },
-            { icon: HandPlatter, label: "Services", href: "/dashboard/services" },
-            { icon: FileChartPie, label: "Appointements", href: "/dashboard/appointement" },
+            { icon: Package, label: "Product List", href: "/dashboard/product" },
+            { icon: HandPlatter, label: "Services List", href: "/dashboard/services" },
+            { icon: Package, label: "Stock Sheet", href: "/dashboard/stock" },
+            { icon: FileChartPie, label: "Service Appointements", href: "/dashboard/appointement" },
         ],
     },
     {
         title: "Sales",
         items: [
+            { icon: CirclePercent, label: "POS", href: "/dashboard/pos" },
             { icon: ShoppingCartIcon, label: "Sales", href: "/dashboard/sales" },
             { icon: ReceiptText, label: "Invoice", href: "/dashboard/invoice" },
-            { icon: CirclePercent, label: "POS", href: "/dashboard/pos" },
         ],
     },
     {
-        title: "Store",
+        title: "Purchases",
         items: [
-            { icon: Package, label: "Manage Stock", href: "/dashboard/stock" },
-            // { icon: NotepadText, label: "Stock Adjustment", href: "/dashboard/stock-ajustment" },
+            { icon: Container, label: "Supply Sheet", href: "/dashboard/supplies" },
+            { icon: PackagePlus, label: "Supplier", href: "/dashboard/suppliers" },
+        ],
+    },
+    {
+        title: "Reports",
+        items: [
+            { icon: User, label: "Sales Report", href: "/dashboard/employees" },
+            { icon: Contact, label: "Purchase Report", href: "/dashboard/customers" },
         ],
     },
     {
         title: "Human ressources",
         items: [
             { icon: User, label: "Employees", href: "/dashboard/employees" },
-            // { icon: NotepadText, label: "Stock Adjustment", href: "/dashboard/stock-ajustment" },
+            { icon: Contact, label: "Customers", href: "/dashboard/customers" },
         ],
     },
 ];
@@ -57,7 +63,7 @@ const Sidebar = () => {
             </div>
             <nav className="mt-8">
                 {sidebarData.map((section, index) => (
-                    <div key={index} className="mb-4">
+                    <div key={index} className="mb-2">
                         {section.title && (
                             <div className="px-4 py-2 text-gray-500 uppercase text-xs font-semibold">
                                 {section.title}
@@ -69,8 +75,8 @@ const Sidebar = () => {
                                 href={item.href}
                                 className="flex items-center justify-between px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-500 hover:rounded-lg transition-all duration-200"
                             >
-                                <div className="flex items-center space-x-2 text-sm">
-                                    <item.icon className="h-5 w-5" />
+                                <div className="flex items-center space-x-2 text-xs">
+                                    <item.icon className="h-4 w-4" />
                                     <span>{item.label}</span>
                                 </div>
                             </Link>

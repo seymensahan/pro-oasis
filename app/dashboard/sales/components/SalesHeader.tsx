@@ -13,7 +13,7 @@ const SalesHeader = () => {
                 <p className="text-sm text-gray-600">Manage Your Sales</p>
             </div>
             <div className="flex space-x-2">
-                <Button variant="outline" size="icon">
+                {/* <Button variant="outline" size="icon">
                     <FileText className="h-4 w-4 text-red-500" />
                 </Button>
                 <Button variant="outline" size="icon">
@@ -24,11 +24,11 @@ const SalesHeader = () => {
                 </Button>
                 <Button variant="outline" size="icon">
                     <RefreshCw className="h-4 w-4" />
-                </Button>
-                <Button onClick={() => setIsModalOpen(true)} className="bg-blue-500 hover:bg-blue-400 text-white">
+                </Button> */}
+                {/* <Button onClick={() => setIsModalOpen(true)} className="bg-blue-500 hover:bg-blue-400 text-white">
                     <Upload className="h-4 w-4 mr-2" />
                     Add New Sales
-                </Button>
+                </Button> */}
             </div>
             <SalesModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
