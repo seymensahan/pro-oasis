@@ -55,7 +55,6 @@ export async function signup(state: FormState, formData: FormData) {
         localStorage.setItem("user-info", JSON.stringify(userData));
         // Redirect to dashboard after successful registration
         redirect(`/dashboard`)
-
     }
 }
 
@@ -91,12 +90,12 @@ export async function login(state: FormState, formData: FormData) {
             // const userData = user.data();
             // localStorage.setItem('user-info', JSON.stringify(userData));
             toast.success("Login successful")
+            redirect("/dashboard")
         }
     } catch (error: any) {
         // Return a generic error if login fails
         return { message: "Wrong credentials, please enter a correct email/password" }
     };
 
-    redirect("/dashboard")
 }
 
