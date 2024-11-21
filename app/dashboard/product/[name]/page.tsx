@@ -28,20 +28,7 @@ interface ProductDetails {
     image: string
 }
 
-const productDetails: ProductDetails = {
-    id: '1',
-    barcode: '86102192',
-    name: 'Macbook pro',
-    category: 'Computers',
-    subCategory: 'None',
-    brand: 'None',
-    unit: 'Piece',
-    sku: 'PT0001',
-    minimumQty: 5,
-    quantity: 50,
-    tax: 0.00,
-    image: '/placeholder.svg?height=400&width=400'
-}
+
 
 interface ParamsProps {
     params: {

@@ -2,7 +2,7 @@ import { auth, firestore } from '@/firebase/config';
 import { addDoc, collection, query, serverTimestamp, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollection, useCollectionData } from 'react-firebase-hooks/firestore';
 import { toast } from 'react-toastify';
 
 interface CustomerType {
@@ -29,20 +29,14 @@ const useCustomer = () => {
         : null;
 
     // Fetch customer data and states from Firestore
-    const [customerCollection, customerLoading, customerError] = useCollectionData(customersQuery, {
-        snapshotListenOptions: { includeMetadataChanges: true },
-    });
+    const [customerCollection, customerLoading, customerError] = useCollection(customersQuery);
 
     // Update customers state when Firestore data changes
     useEffect(() => {
         if (customerCollection && !customerLoading) {
-            const fetchedCustomers = customerCollection.map((doc: any) => ({
+            const fetchedCustomers = customerCollection.docs.map((doc: any) => ({
                 id: doc.id,
-                name: doc.name,
-                email: doc.email,
-                tel: doc.tel,
-                purchases: doc.purchases || [],
-                createdAt: doc.createdAt
+                ...doc.data()
             }));
             setCustomers(fetchedCustomers);
         }
