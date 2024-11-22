@@ -4,8 +4,8 @@ import { Label } from "@/components/ui/label"
 import Link from 'next/link'
 import { AlertCircle, Loader2, User } from "lucide-react"
 import { useFormState, useFormStatus } from "react-dom"
-import { login } from "@/app/actions/auth"
 import { useState } from "react"
+import { login } from "@/app/actions/auth"
 
 export function LoginForm() {
     const [state, action, isPending] = useFormState(login, undefined)
@@ -68,18 +68,7 @@ export function LoginForm() {
                 </div>
             </div>
             <SubmitButton />
-            {state?.message && (
-                <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50" role="alert">
-                    <AlertCircle className="flex-shrink-0 inline w-4 h-4 mr-3" />
-                    <span className="sr-only">Error</span>
-                    <div>
-                        <span className="font-medium">Registration failed!, password should be:</span>
-                        {/* {state.errors.password.map((error) => ( */}
-                            <li>{state.message}</li>
-                        {/* ))} */}
-                    </div>
-                </div>
-            )}
+            
         </form>
     )
 }

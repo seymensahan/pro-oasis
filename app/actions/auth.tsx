@@ -1,3 +1,4 @@
+
 import { auth, firestore } from "@/firebase/config";
 import { FormState, LoginFormSchema, SignupFormSchema } from "@/lib/definitions"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -68,19 +69,12 @@ export async function login(state: FormState, formData: FormData) {
 
     const { email, password } = validatedFields.data
 
-    try {
-        
-        const user = await signInWithEmailAndPassword(auth, email, password);
+    const user = await signInWithEmailAndPassword(auth, email, password);
 
-        if (user) {
-            // const userData = user.data();
-            // localStorage.setItem('user-info', JSON.stringify(userData));
-            toast.success("Login successful")
-        }
-    } catch (error: any) {
-        // Return a generic error if login fails
-        return { message: "Wrong credentials, please enter a correct email/password" }
-    };
-
+    if (user) {
+        // const userData = user.data();
+        // localStorage.setItem('user-info', JSON.stringify(userData));
+        toast.success("Login successful")
+    }
     redirect("/dashboard")
 }
