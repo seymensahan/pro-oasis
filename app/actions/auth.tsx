@@ -1,7 +1,6 @@
-
 import { auth, firestore } from "@/firebase/config";
 import { FormState, LoginFormSchema, SignupFormSchema } from "@/lib/definitions"
-import { createUserWithEmailAndPassword, getIdToken, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
@@ -26,13 +25,6 @@ export async function signup(state: FormState, formData: FormData) {
     const { name, email, password } = validatedFields.data
 
     const newUser = await createUserWithEmailAndPassword(auth, email, password);
-    const user = newUser.user;
-
-        // Get the user's ID token
-        const token = await getIdToken(user, true);
-
-        // Set the token as a secure cookie
-        document.cookie = `auth-token=${token}; path=/; secure; samesite=strict`;
 
     if (newUser) {
         await updateProfile(newUser.user, {
@@ -55,6 +47,7 @@ export async function signup(state: FormState, formData: FormData) {
         localStorage.setItem("user-info", JSON.stringify(userData));
         // Redirect to dashboard after successful registration
         redirect(`/dashboard`)
+
     }
 }
 
@@ -76,26 +69,18 @@ export async function login(state: FormState, formData: FormData) {
     const { email, password } = validatedFields.data
 
     try {
-
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        // Get the user's ID token
-        const token = await getIdToken(user, true);
-
-        // Set the token as a secure cookie
-        document.cookie = `auth-token=${token}; path=/; secure; samesite=strict`;
+        
+        const user = await signInWithEmailAndPassword(auth, email, password);
 
         if (user) {
             // const userData = user.data();
             // localStorage.setItem('user-info', JSON.stringify(userData));
             toast.success("Login successful")
-            redirect("/dashboard")
         }
     } catch (error: any) {
         // Return a generic error if login fails
         return { message: "Wrong credentials, please enter a correct email/password" }
     };
 
+    redirect("/dashboard")
 }
-
