@@ -4,6 +4,7 @@ import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hook
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
 import { useAuth } from '@/context/AuthContext';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export function useLogin() {
     const [email, setEmail] = useState('');
@@ -15,11 +16,11 @@ export function useLogin() {
     const { user } = useAuth();
 
     // Firebase sign-in hook
-    const [
-        signInWithEmailAndPassword,
-        loading,
-        error
-    ] = useSignInWithEmailAndPassword(auth);
+    // const [
+    //     signInWithEmailAndPassword,
+    //     loading,
+    //     error
+    // ] = useSignInWithEmailAndPassword(auth);
 
     useEffect(() => {
         // Redirect if user is already in store or Firebase user object is present
@@ -33,7 +34,8 @@ export function useLogin() {
 
         try {
             // Sign in with Firebase Authentication
-            const userCredential = await signInWithEmailAndPassword(email, password);
+            
+            const userCredential = await signInWithEmailAndPassword(auth, email, password)
             const user = userCredential?.user;
 
             if (user) {
@@ -69,8 +71,6 @@ export function useLogin() {
         setPassword,
         showPassword,
         setShowPassword,
-        error,
-        loading,
         handleLogin,
     };
 }
