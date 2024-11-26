@@ -23,12 +23,17 @@ export default function LoginPage() {
                             Sign Up
                         </Link>
                     </p>
+                    <p className="mt-4 text-center text-sm text-gray-600">
+                        <Link className="font-medium text-blue-600 hover:underline" href="/reset">
+                            Forgot password
+                        </Link>
+                    </p>
                 </div>
             </div>
             <div className="w-full lg:w-1/2 bg-gray-100">
                 <div className="h-full w-full relative">
                     <Image
-                        src="/login-image.jpg" 
+                        src="/login-image.jpg"
                         alt="Stock management system"
                         layout="fill"
                         objectFit="cover"
