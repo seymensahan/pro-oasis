@@ -52,8 +52,13 @@ export function useLogin() {
                 }
 
                 toast.success("Login Successful")
+
+                
                 // Redirect to dashboard after successful login
-                router.push('/dashboard');
+                console.log("Before redirect");
+                router.refresh(); // dirty fix, but it works
+                router.push("/dashboard");
+                console.log("After redirect");
             }
         } catch (err: any) {
             toast.error(`An error during login: ${err.message}`);
