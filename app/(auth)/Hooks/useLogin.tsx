@@ -6,7 +6,6 @@ import { auth, firestore } from '@/firebase/config';
 import { useAuth } from '@/context/AuthContext';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
-import { truncateByDomain } from 'recharts/types/util/ChartUtils';
 
 export function useLogin() {
     const [email, setEmail] = useState('');

@@ -32,8 +32,8 @@ const page = () => {
 
     return (
         <div className='flex w-full justify-center items-center w-[100%] h-[100vh]'>
-            <div className='flex flex-col justify-center items-center w-[50%] space-y-4 '>
-                <h3 className='text-3xl text-bold align-center'>Reset password</h3>
+            <div className='flex flex-col justify-center items-center w-[50%] space-y-4 text-center'>
+                <h3 className='text-3xl text-bold'>Reset password</h3>
                 <p>A link will be sent to your mailbox for you to reset your password</p>
                 <Input
                     placeholder='Enter your email address'

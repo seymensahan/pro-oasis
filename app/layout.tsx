@@ -26,10 +26,10 @@ export default function RootLayout({
       <body>
         {/* <PrivateRoute> */}
         <AuthProvider>
-          <ProtectedRoute>
+          {/* <ProtectedRoute> */}
             <ToastContainer />
             {children}
-          </ProtectedRoute>
+          {/* </ProtectedRoute> */}
         </AuthProvider>
         {/* </PrivateRoute> */}
       </body>
