@@ -13,6 +13,7 @@ export function LoginForm() {
         setPassword,
         showPassword,
         setShowPassword,
+        error,
         loading,
         handleLogin,
     } = useLogin();
@@ -89,7 +90,7 @@ export function LoginForm() {
                 </div>
             </div>
             <Button className="w-full bg-blue-600 hover:bg-blue-400" type="submit">
-                {loading ? <Loader2 className="animate-spin"/> : "Login"}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Sign In'}
             </Button>
         </form>
     )

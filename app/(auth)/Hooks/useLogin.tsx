@@ -4,33 +4,36 @@ import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hook
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
 import { useAuth } from '@/context/AuthContext';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { toast } from 'react-toastify';
 
 export function useLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false)
     const router = useRouter();
-
-
+    
+    
     const { user } = useAuth();
 
-    // useEffect(() => {
-    //     // Redirect if user is already in store or Firebase user object is present
-    //     if (user) {
-    //         router.push('/dashboard');
-    //     }
-    // }, [user, router]);
+    // Firebase sign-in hook
+    const [
+        signInWithEmailAndPassword,
+        loading,
+        error
+    ] = useSignInWithEmailAndPassword(auth);
+
+    useEffect(() => {
+        // Redirect if user is already in store or Firebase user object is present
+        if (user) {
+            router.push('/dashboard');
+        }
+    }, [ user, router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            setLoading(true)
             // Sign in with Firebase Authentication
-            const userCredential = await signInWithEmailAndPassword(auth, email, password)
+            const userCredential = await signInWithEmailAndPassword(email, password);
             const user = userCredential?.user;
 
             if (user) {
@@ -39,31 +42,23 @@ export function useLogin() {
 
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-
+                    
 
                     // Store user data in localStorage
                     try {
                         localStorage.setItem('user-info', JSON.stringify(userData));
-                    } catch (error: any) {
-                        toast.error('Error storing user info in localStorage:', error);
+                    } catch (error) {
+                        console.error('Error storing user info in localStorage:', error);
                     }
                 } else {
-                    toast.error('User document does not exist');
+                    console.warn('User document does not exist');
                 }
 
-                toast.success("Login Successful")
-
-
                 // Redirect to dashboard after successful login
-                console.log("Before redirect");
-                router.refresh(); 
-                router.push("/dashboard");
-                console.log("After redirect");
+                router.push('/dashboard');
             }
-        } catch (err: any) {
-            toast.error(`An error during login: ${err.message}`);
-        } finally {
-            setLoading(false)
+        } catch (err) {
+            console.error('Error during login:', err);
         }
     };
 
@@ -74,6 +69,7 @@ export function useLogin() {
         setPassword,
         showPassword,
         setShowPassword,
+        error,
         loading,
         handleLogin,
     };
