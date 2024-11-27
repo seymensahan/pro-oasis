@@ -17,12 +17,12 @@ export function useLogin() {
 
     const { user } = useAuth();
 
-    useEffect(() => {
-        // Redirect if user is already in store or Firebase user object is present
-        if (user) {
-            router.push('/dashboard');
-        }
-    }, [user, router]);
+    // useEffect(() => {
+    //     // Redirect if user is already in store or Firebase user object is present
+    //     if (user) {
+    //         router.push('/dashboard');
+    //     }
+    // }, [user, router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -53,10 +53,10 @@ export function useLogin() {
 
                 toast.success("Login Successful")
 
-                
+
                 // Redirect to dashboard after successful login
                 console.log("Before redirect");
-                router.refresh(); // dirty fix, but it works
+                router.refresh(); 
                 router.push("/dashboard");
                 console.log("After redirect");
             }
