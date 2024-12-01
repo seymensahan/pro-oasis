@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { toast } from 'react-toastify';
 import { UnitProps } from '../../../../lib/Types';
-import { useAuth } from '@/context/AuthContext';
+import useAuth from '@/app/(auth)/Hooks/useAuth';
 
 const useUnit = () => {
     const [errors, setErrors] = useState<string | null>(null);

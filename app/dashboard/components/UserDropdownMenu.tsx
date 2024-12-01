@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from '../../(auth)/Hooks/LogoutButton';
-import { useAuth } from '@/context/AuthContext';
+import useAuth from '@/app/(auth)/Hooks/useAuth';
 
 const UserDropdownMenu = () => {
     const { user, loading } = useAuth();

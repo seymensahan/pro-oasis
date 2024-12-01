@@ -1,76 +1,49 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
-import { useAuth } from '@/context/AuthContext';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+
+
+interface LoginInputs {
+    email: string;
+    password: string;
+}
+
 
 export function useLogin() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const router = useRouter();
-    
-    
-    const { user } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Firebase sign-in hook
-    const [
-        signInWithEmailAndPassword,
-        loading,
-        error
-    ] = useSignInWithEmailAndPassword(auth);
+    const login = async (inputs: LoginInputs) => {
 
-    useEffect(() => {
-        // Redirect if user is already in store or Firebase user object is present
-        if (user) {
-            router.push('/dashboard');
+        if (!inputs.email || !inputs.password) {
+            toast.error("Please fill all the fields");
+            setLoading(false);
+            return;
         }
-    }, [ user, router]);
-
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
 
         try {
             // Sign in with Firebase Authentication
-            const userCredential = await signInWithEmailAndPassword(email, password);
-            const user = userCredential?.user;
+            const userCred = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
+            const user = userCred?.user;
 
             if (user) {
                 // Retrieve user data from Firestore
                 const userDoc = await getDoc(doc(firestore, 'users', user.uid));
 
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    
-
-                    // Store user data in localStorage
-                    try {
-                        localStorage.setItem('user-info', JSON.stringify(userData));
-                    } catch (error) {
-                        console.error('Error storing user info in localStorage:', error);
-                    }
-                } else {
-                    console.warn('User document does not exist');
+                if (userCred) {
+                    const docRef = doc(firestore, "users", userCred.user.uid);
+                    const docSnap = await getDoc(docRef);
+                    localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
                 }
-
-                // Redirect to dashboard after successful login
-                router.push('/dashboard');
             }
-        } catch (err) {
-            console.error('Error during login:', err);
+        } catch (err: any) {
+            toast.error('Error during login:', err.message);
+        } finally {
+            setLoading(false)
         }
     };
 
-    return {
-        email,
-        setEmail,
-        password,
-        setPassword,
-        showPassword,
-        setShowPassword,
-        error,
-        loading,
-        handleLogin,
-    };
+    return { loading, error, login };
 }

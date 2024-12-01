@@ -1,4 +1,3 @@
-import { useAuth } from "@/context/AuthContext"
 import { firestore } from "@/firebase/config"
 import { FormData, ProductDataProps, Supply, SupplyDataProps } from "@/lib/Types"
 import { collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore"
@@ -6,6 +5,7 @@ import { useEffect, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
 import { toast } from "react-toastify"
 import useGetProducts from "../../product/hooks/useGetProducts"
+import useAuth from "@/app/(auth)/Hooks/useAuth"
 
 
 const useSaveSupply = () => {

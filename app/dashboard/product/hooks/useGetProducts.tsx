@@ -3,8 +3,8 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { firestore } from '@/firebase/config';
 import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { ProductDataProps } from '../../../../lib/Types';
-import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
+import useAuth from '@/app/(auth)/Hooks/useAuth';
 
 const useGetProducts = () => {
     const [products, setProducts] = useState<ProductDataProps[]>([]);

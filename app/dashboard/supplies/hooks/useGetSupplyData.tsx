@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { QuerySnapshot, DocumentData, query, collection, where, getDocs } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { ProductDataProps, SupplyDataProps } from "@/lib/Types";
-import { useAuth } from "@/context/AuthContext";
 import { firestore } from "@/firebase/config";
 import { useCollection } from "react-firebase-hooks/firestore";
+import useAuth from "@/app/(auth)/Hooks/useAuth";
 
 const useProductDataMap = (userId?: string) => {
     const [productMap, setProductMap] = useState<Record<string, ProductDataProps>>({});

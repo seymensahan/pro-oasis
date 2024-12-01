@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/AuthContext'
+import useAuth from '@/app/(auth)/Hooks/useAuth'
 import { firestore } from '@/firebase/config'
 import { addDoc, collection, query, serverTimestamp, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'

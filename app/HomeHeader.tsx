@@ -1,11 +1,11 @@
 "use client"
 
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
 import { PieChart } from 'lucide-react';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
+import useAuth from './(auth)/Hooks/useAuth';
 
 const HomeHeader = () => {
     const { user, loading } = useAuth();

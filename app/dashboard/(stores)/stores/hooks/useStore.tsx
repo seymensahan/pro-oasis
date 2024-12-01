@@ -1,10 +1,10 @@
-import { useAuth } from '@/context/AuthContext'
 import { firestore } from '@/firebase/config'
 import { setDefaultResultOrder } from 'dns'
 import { collection, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { Store } from '../page'
+import useAuth from '@/app/(auth)/Hooks/useAuth'
 
 const useStore = () => {
     const [stores, setStores] = useState<Store[]>([])

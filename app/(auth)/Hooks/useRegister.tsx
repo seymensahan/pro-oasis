@@ -3,8 +3,8 @@ import { useRouter } from 'next/navigation';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, firestore } from '@/firebase/config';
-import { useAuth } from '@/context/AuthContext';
 import { updateProfile } from 'firebase/auth';
+import useAuth from './useAuth';
 
 interface FormData {
     name: string;

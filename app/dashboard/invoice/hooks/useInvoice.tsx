@@ -1,9 +1,9 @@
-import { useAuth } from '@/context/AuthContext'
 import { firestore } from '@/firebase/config'
 import { collection, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { SaleData } from '../../sales/types'
+import useAuth from '@/app/(auth)/Hooks/useAuth'
 
 const useInvoice = () => {
     const [invoices, setInvoices] = useState<SaleData[]>([])

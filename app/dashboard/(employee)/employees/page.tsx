@@ -5,11 +5,11 @@
 import { useState, useReducer } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
 import useEmployee, { EmployeeType } from './hooks/useEmployee';
 import { EmployeeForm } from './components/EmployeeForm';
 import { EmployeeTable } from './components/EmployeeTable';
 import { StoreAssignmentDialog } from './components/StoreAssignmentDialog';
+import useAuth from '@/app/(auth)/Hooks/useAuth';
 
 // Sample Data
 const stores = [

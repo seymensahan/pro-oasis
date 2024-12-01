@@ -5,9 +5,9 @@ import { CartItem } from '@/lib/Types'
 import { useSaveSale } from '../../sales/hooks/useSaveSale'
 import { SaleData } from '../../sales/types'
 import { serverTimestamp, Timestamp } from 'firebase/firestore'
-import { useAuth } from '@/context/AuthContext'
 import { toast } from 'react-toastify'
 import SalesConfirmationModal from '../../sales/components/SalesConfirmation'
+import useAuth from '@/app/(auth)/Hooks/useAuth'
 
 interface PaymentProps {
     cart: CartItem[]

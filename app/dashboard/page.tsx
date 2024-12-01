@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/table"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { ArrowUpRight, DollarSign, Users, ShoppingCart, ChevronRight } from 'lucide-react'
-import { useAuth } from '@/context/AuthContext'
 import DashboardStats from './components/DashboardStats'
+import useAuth from '../(auth)/Hooks/useAuth'
+import { useRouter } from 'next/navigation'
 
 const salesData = [
     { name: 'Jan', sales: 200, purchase: 120 },
@@ -38,15 +39,23 @@ const bestSellers = [
     { id: 3, name: 'Nike Jordan', price: 8784, sales: 1478, image: '/placeholder.svg?height=50&width=50' },
 ]
 
-const stats =[
-    { title: "Total Revenue", amount: 12231, progress: "+20.1% from last month", icon: DollarSign},
-    { title: "New Customers", amount: 2345, progress: "+15.3% from last month", icon: Users},
-    { title: "Total Orders", amount: 5678, progress: "+12.7% from last month", icon: ShoppingCart},
-    { title: "Total Sales", amount: 21456, progress: "+18.2% from last month", icon: ArrowUpRight},
+const stats = [
+    { title: "Total Revenue", amount: 12231, progress: "+20.1% from last month", icon: DollarSign },
+    { title: "New Customers", amount: 2345, progress: "+15.3% from last month", icon: Users },
+    { title: "Total Orders", amount: 5678, progress: "+12.7% from last month", icon: ShoppingCart },
+    { title: "Total Sales", amount: 21456, progress: "+18.2% from last month", icon: ArrowUpRight },
 ]
 
 export default function Dashboard() {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push("/login");
+        }
+    }, [loading, user, router]);
+
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -57,7 +66,7 @@ export default function Dashboard() {
                         {stats.map((stat, index) => (
                             <DashboardStats title={stat.title} amount={stat.amount} progress={stat.progress} icon={<stat.icon />} />
                         ))}
-                    
+
                     </div>
 
                     <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">

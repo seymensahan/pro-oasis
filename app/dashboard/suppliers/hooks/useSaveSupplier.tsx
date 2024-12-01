@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/AuthContext'
+import useAuth from '@/app/(auth)/Hooks/useAuth'
 import { firestore } from '@/firebase/config'
 import { SupplierModalProps } from '@/lib/Types'
 import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore'

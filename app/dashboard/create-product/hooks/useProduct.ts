@@ -4,7 +4,7 @@ import { addDoc, and, collection, getDocs, query, serverTimestamp, where } from 
 import { firestore, storage } from '@/firebase/config'
 import { toast } from 'react-toastify'
 import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
-import { useAuth } from '@/context/AuthContext'
+import useAuth from '@/app/(auth)/Hooks/useAuth'
 
 
 const useProduct = () => {

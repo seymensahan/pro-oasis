@@ -4,19 +4,35 @@ import { Label } from "@/components/ui/label"
 import Link from 'next/link'
 import { useLogin } from '@/app/(auth)/Hooks/useLogin'
 import { Loader2 } from "lucide-react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import useAuth from "../Hooks/useAuth"
+
+
 
 export function LoginForm() {
-    const {
-        email,
-        setEmail,
-        password,
-        setPassword,
-        showPassword,
-        setShowPassword,
-        error,
-        loading,
-        handleLogin,
-    } = useLogin();
+    const { login } = useAuth();
+    const [inputs, setInputs] = useState({
+        email: '',
+        password: '',
+    });
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false)
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setLoading(true);
+        try {
+            await login(inputs.email, inputs.password);
+        } catch (error: any) {
+            setError(error.message || "Failed to login");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <form onSubmit={handleLogin} className="space-y-4">
@@ -28,8 +44,8 @@ export function LoginForm() {
                         id="email"
                         placeholder="Enter your email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={inputs.email}
+                        onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
                         required
                     />
                     <svg
@@ -56,8 +72,8 @@ export function LoginForm() {
                         id="password"
                         placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={inputs.password}
+                        onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                         required
                     />
                     <svg
