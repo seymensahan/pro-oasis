@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from '../../(auth)/Hooks/LogoutButton';
 import useAuth from '@/app/(auth)/Hooks/useAuth';
+import Link from 'next/link';
 
 const UserDropdownMenu = () => {
     const { user, loading } = useAuth();
@@ -32,16 +33,20 @@ const UserDropdownMenu = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                    <Button variant="ghost" className="w-full justify-start">
-                        <Users className="mr-2 h-4 w-4" />
-                        <span>My Profile</span>
-                    </Button>
+                    <Link href="/dashboard/profile">
+                        <Button variant="ghost" className="w-full justify-start">
+                            <Users className="mr-2 h-4 w-4" />
+                            <span>My Profile</span>
+                        </Button>
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                    <Button variant="ghost" className="w-full justify-start">
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Settings</span>
-                    </Button>
+                    <Link href="/dashboard/settings">
+                        <Button variant="ghost" className="w-full justify-start">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                        </Button>
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                     <LogoutButton />
