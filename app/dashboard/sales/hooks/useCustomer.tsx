@@ -73,8 +73,8 @@ const useCustomer = () => {
     };
 
     // Ensure user?.uid is properly typed beforehand
-    const getCustomerWithName = async (name: string): Promise<CustomerType | null> => {
-        if (!name.trim()) return null; // Ensure name is non-empty after trimming spaces
+    const getCustomerWithName = async (name: string | undefined): Promise<CustomerType | null> => {
+        // if (!name.trim()) return null; // Ensure name is non-empty after trimming spaces
 
         try {
             // Validate user existence and store ID

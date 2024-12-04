@@ -1,26 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Printer, Download, ExternalLink } from 'lucide-react';
 import { SaleData } from '../../sales/types';
 import formatDate from '@/lib/FormatDate';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import InvoiceTemplate from './InvoiceTemplate';
-import html2pdf from "html2pdf-ts"
+import useCustomer from '../../sales/hooks/useCustomer';
+import useAuth from '@/app/(auth)/Hooks/useAuth';
 
 interface InvoiceDetailModalProps {
     isOpen: boolean;
@@ -30,18 +21,31 @@ interface InvoiceDetailModalProps {
 
 export default function InvoiceDetailModal({ isOpen, onClose, invoice }: InvoiceDetailModalProps) {
     const componentRef = useRef<HTMLDivElement>(null);
+    const { user } = useAuth()
 
-    const handleExport = (action: 'print' | 'download') => {
+    const { getCustomerWithName, selectedCustomerData } = useCustomer()
+
+    useEffect(() => {
+        getCustomerWithName(invoice?.customerName)
+    }, [invoice?.customerName])
+
+    const GeneratePDF = async () => {
         if (!componentRef.current) return;
 
-        const options = {
-            margin: 1,
-            filename: `Invoice-${invoice?.reference || 'unknown'}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-        };
+        const canvas = await html2canvas(componentRef.current);
 
+        // Convert canvas to Data URL
+        const imgData = canvas.toDataURL('image/png');
+
+        // Initialize jsPDF instance
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        // Add the image to the PDF at specified position and size
+        const pdfWidth = 210; // A4 width in mm
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`Invoice-${invoice?.reference || 'unknown'}.pdf`);
     };
 
     if (!invoice) return null;
@@ -55,11 +59,12 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
+            <div ref={componentRef}>
+                <InvoiceTemplate companyName={user?.displayName} companyEmail={user?.email} logo={user?.photoURL} customerEmail={selectedCustomerData?.email} customerTel={selectedCustomerData?.tel}  {...invoice} />
+            </div>
             <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold">
-                        Invoice {invoice.reference}
-                    </DialogTitle>
+                    <DialogTitle className="text-2xl font-bold">Invoice {invoice.reference}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-6">
                     {/* Customer Details */}
@@ -67,19 +72,20 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
                         <div>
                             <h3 className="font-semibold text-lg">Customer Details</h3>
                             <p>{invoice.customerName}</p>
+                            <p>{selectedCustomerData?.email}</p>
+                            <p>{selectedCustomerData?.tel}</p>
                         </div>
                         <div className="text-right">
                             <p className="font-semibold">
                                 Invoice Date: {formatDate(invoice.date)}
                             </p>
                             <span
-                                className={`mt-2 inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                                    invoice.status === 'Completed'
-                                        ? 'bg-green-100 text-green-800'
-                                        : invoice.status === 'Pending'
+                                className={`mt-2 inline-block px-2 py-1 rounded-full text-xs font-semibold ${invoice.status === 'Completed'
+                                    ? 'bg-green-100 text-green-800'
+                                    : invoice.status === 'Pending'
                                         ? 'bg-yellow-100 text-yellow-800'
                                         : 'bg-red-100 text-red-800'
-                                }`}
+                                    }`}
                             >
                                 {invoice.status}
                             </span>
@@ -140,11 +146,7 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
                                 <Mail className="mr-2 h-4 w-4" />
                                 Email
                             </Button>
-                            <Button onClick={() => handleExport('print')} variant="default" size="sm">
-                                <Printer className="mr-2 h-4 w-4" />
-                                Print
-                            </Button>
-                            <Button onClick={() => handleExport('download')} variant="default" size="sm">
+                            <Button onClick={() => GeneratePDF()} variant="default" size="sm">
                                 <Download className="mr-2 h-4 w-4" />
                                 Download
                             </Button>
@@ -156,8 +158,6 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
                     </div>
                 </div>
             </DialogContent>
-
-            {/* Invoice Template */}
         </Dialog>
     );
 }

@@ -8,7 +8,7 @@ const sidebarData = [
         title: "Main",
         items: [
             { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-            { icon: Store, label: "Stores", href: "/dashboard/stores" },
+            // { icon: Store, label: "Stores", href: "/dashboard/stores" },
             // { icon: BarChart2, label: "Sales Dashboard", href: "/sales-dashboard" },
         ],
     },

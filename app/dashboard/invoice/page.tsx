@@ -25,59 +25,7 @@ import useInvoice from './hooks/useInvoice'
 import formatDate from '@/lib/FormatDate'
 import { SaleData } from '../sales/types'
 
-interface InvoiceItem {
-    description: string
-    quantity: number
-    unitPrice: number
-    total: number
-}
 
-interface Invoice {
-    id: string
-    customerName: string
-    customerEmail: string
-    date: string
-    dueDate: string
-    amount: number
-    status: 'Paid' | 'Pending' | 'Overdue'
-    items: InvoiceItem[]
-}
-
-const mockInvoices: Invoice[] = [
-    {
-        id: 'INV-001',
-        customerName: 'John Doe',
-        customerEmail: 'john@example.com',
-        date: '2023-05-01',
-        dueDate: '2023-05-15',
-        amount: 1500.00,
-        status: 'Paid',
-        items: [
-            { description: 'Item 1', quantity: 2, unitPrice: 500, total: 1000 },
-            { description: 'Item 2', quantity: 1, unitPrice: 500, total: 500 },
-        ]
-    },
-    {
-        id: 'INV-002',
-        customerName: 'Jane Smith',
-        customerEmail: 'jane@example.com',
-        date: '2023-05-03',
-        dueDate: '2023-05-17',
-        amount: 2300.50,
-        status: 'Pending',
-        items: [{ description: 'Service A', quantity: 1, unitPrice: 2300.50, total: 2300.50 }]
-    },
-    {
-        id: 'INV-003',
-        customerName: 'Bob Johnson',
-        customerEmail: 'bob@example.com',
-        date: '2023-04-28',
-        dueDate: '2023-05-12',
-        amount: 980.75,
-        status: 'Overdue',
-        items: [{ description: 'Product B', quantity: 1, unitPrice: 980.75, total: 980.75 }]
-    }
-]
 
 export default function InvoiceListPage() {
     const { invoices, loading } = useInvoice()
