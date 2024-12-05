@@ -74,6 +74,10 @@ export const useRegister = () => {
                     createdAt: serverTimestamp(),
                     role: "",
                     profilepic: "",
+                    taxRate: "19.25",
+                    currency: "XAF",
+                    timeZone: "UTC",
+                    language: "en"
                 };
 
                 // Store user data in Firestore

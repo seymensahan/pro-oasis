@@ -79,8 +79,11 @@ const POSPage = () => {
                 <div className="mt-20">
                     <OrderSummary cart={cart} />
                 </div>
-                <PaymentActions cart={cart} customer={selectedCustomer} />
-
+                <PaymentActions
+                    cart={cart}
+                    customer={selectedCustomer}
+                    onSaleComplete={() => setCart([])} // Reset the cart after sale completion
+                />
             </div>
             <NewCustomerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>

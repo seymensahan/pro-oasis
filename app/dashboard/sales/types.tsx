@@ -27,6 +27,8 @@ export interface SaleData {
     status: 'Completed' | 'Pending'
     paid: number
     due: number
+    taxRate?: number
+    taxAmount?: number
     paymentStatus: 'Paid' | 'Due'
     reference?: string;
     biller?: string

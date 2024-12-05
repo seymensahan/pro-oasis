@@ -15,19 +15,19 @@ interface invoiceType extends SaleData {
     companyPhone?: string | null
     companyAddress?: string | null
     logo?: string | null
-    tax?: number
+    taxRate?: number
     customerEmail?: string
     customerTel?: string
 }
 
 
-const InvoiceTemplate = ({ companyName, companyEmail, companyPhone, companyAddress, logo, date, reference, customerName, customerEmail, customerTel,  products, tax, grandTotal }: invoiceType) => {
+const InvoiceTemplate = ({ companyName, companyEmail, companyPhone, companyAddress, logo, date, reference, customerName, customerEmail, customerTel, products, taxRate, grandTotal }: invoiceType) => {
     // const logoUrl = '/placeholder.svg';
     const subtotal = products?.reduce(
         (sum, item) => sum + item.price * item.quantityOrdered,
         0
     ) ?? 0;
-    // const tax = subtotal * 0.03; // Assuming 3% tax
+    const tax = subtotal * (taxRate ? taxRate / 100 : 0);
     const total = subtotal;
 
 
@@ -100,8 +100,8 @@ const InvoiceTemplate = ({ companyName, companyEmail, companyPhone, companyAddre
                                 <span>{subtotal.toFixed(2)}FCFA</span>
                             </div>
                             <div className="flex justify-between mb-2">
-                                <span>Tax ({tax}%):</span>
-                                {/* <span>{tax.toFixed(2)}FCFA</span> */}
+                                <span>Tax ({taxRate}%):</span>
+                                <span>{tax.toFixed(2)}FCFA</span>
                             </div>
                             <div className="flex justify-between font-semibold text-lg">
                                 <span>Total:</span>

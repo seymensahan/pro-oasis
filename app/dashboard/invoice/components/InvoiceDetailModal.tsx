@@ -12,6 +12,7 @@ import html2canvas from 'html2canvas';
 import InvoiceTemplate from './InvoiceTemplate';
 import useCustomer from '../../sales/hooks/useCustomer';
 import useAuth from '@/app/(auth)/Hooks/useAuth';
+import { fetchUserData } from '@/lib/fetchUserData';
 
 interface InvoiceDetailModalProps {
     isOpen: boolean;
@@ -54,7 +55,7 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
         (sum, item) => sum + item.price * item.quantityOrdered,
         0
     ) ?? 0;
-    const tax = subtotal * 0.03; // Assuming 3% tax
+    const tax = subtotal * (invoice.taxRate ? invoice.taxRate / 100 : 0); 
     const total = subtotal + tax;
 
     return (
@@ -128,7 +129,7 @@ export default function InvoiceDetailModal({ isOpen, onClose, invoice }: Invoice
                                 <span>{subtotal} FCFA</span>
                             </div>
                             <div className="flex justify-between">
-                                <span>Tax (3%):</span>
+                                <span>Tax ({invoice.taxRate}%):</span>
                                 <span>{tax} FCFA</span>
                             </div>
                             <Separator />
