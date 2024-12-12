@@ -126,37 +126,7 @@ const StockDetailsModal = ({ isOpen, onClose, products }: StockModalProps) => {
                                                 </TableRow>
                                             </TableBody>
                                         </Table>
-                                        <div>
-                                            <h1>Filtered Data</h1>
-                                            <div>
-                                                <label>
-                                                    Start Date:
-                                                    <input
-                                                        type="date"
-                                                        value={startDate}
-                                                        onChange={(e) => setStartDate(e.target.value)}
-                                                    />
-                                                </label>
-                                                <label>
-                                                    End Date:
-                                                    <input
-                                                        type="date"
-                                                        value={endDate}
-                                                        onChange={(e) => setEndDate(e.target.value)}
-                                                    />
-                                                </label>
-                                                <button onClick={handleFilter}>Filter</button>
-                                            </div>
-                                            <ul>
-                                                {data.map(item => (
-                                                    <li key={item.id}>
-                                                        <strong>{item.type === "A" ? "Collection A" : "Collection B"}</strong>
-                                                        - {item.name || item.title}
-                                                        - Created At: {item.createdAt?.toLocaleString()}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
+                                        
                                     </CardContent>
                                 </Card>
                             </TabsContent>
