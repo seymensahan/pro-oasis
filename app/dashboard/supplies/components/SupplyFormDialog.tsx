@@ -5,9 +5,12 @@ import { Button } from '@/components/ui/button';
 import { FormData, Supply, SupplyDataProps } from '@/lib/Types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 import useSaveSupply from '../hooks/useSaveSupply';
 import useGetProducts from '../../product/hooks/useGetProducts';
+import useGetSupplier from '../../suppliers/hooks/useGetSupplier';
+import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 type SupplyFormDialogProps = {
     isOpen: boolean;
@@ -27,6 +30,8 @@ export default function SupplyFormDialog({
     const [isFormValid, setIsFormValid] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
     const { getProductByName, selectedProductData, products } = useGetProducts();
+    const { supplier } = useGetSupplier()
+    const [loading, setLoading] = useState(false)
 
 
     const { saveSupply } = useSaveSupply()
@@ -41,7 +46,15 @@ export default function SupplyFormDialog({
         e.preventDefault();
         if (!isFormValid) return;
 
-        await saveSupply(formData)
+        try {
+            setLoading(true)
+            await saveSupply(formData)
+        } catch (error: any) {
+            toast.error("An error occured trying to make the order")
+        } finally {
+            setLoading(false)
+        }
+
         // console.log(formData);
         onClose();
     };
@@ -65,9 +78,11 @@ export default function SupplyFormDialog({
                             <Label htmlFor="productName" className="text-right">Product Name (Please create the product first if not found)</Label>
                             <Select
                                 name="product"
-                                required value={selectedProduct ?? undefined}
                                 onValueChange={handleProductChange}
-                                >
+                                value={formData.productName}
+                                // onValueChange={(value) => setFormData({ ...formData, productName: value })}
+                                required
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Choose"
                                     />
@@ -106,28 +121,56 @@ export default function SupplyFormDialog({
                                             <SelectValue placeholder="Select category" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {/* {category?.map((category) => (
-                                                <SelectItem key={category.id} value={category.name}>
-                                                    {category.name}
+                                            {supplier?.map((supplier) => (
+                                                <SelectItem key={supplier.id} value={supplier.name}>
+                                                    {supplier.name}
                                                 </SelectItem>
-                                            ))} */}
-                                            <SelectItem value="jons">Jons</SelectItem>
-                                            <SelectItem value="jacjy">Jacjy</SelectItem>
-                                            <SelectItem value="brice">Brice</SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                     {/* onClick={onOpenCategoryModal} */}
-                                    <Button variant="ghost" size="icon" className="ml-2" >
-                                        <Plus className="h-4 w-4" />
-                                    </Button>
+                                    <Link href="./suppliers">
+                                        <Button variant="ghost" size="icon" className="ml-2" >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center ">
+                            <div className="w-full">
+                                <Label htmlFor="product-category">Status *</Label>
+                                <div className="flex items-center">
+                                    <Select
+                                        value={formData.status}
+                                        onValueChange={(value) => setFormData({ ...formData, status: value })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="delivered">Delivered</SelectItem>
+                                            <SelectItem value="partially delivered">Partially Delivered</SelectItem>
+                                            <SelectItem value="not delivered">Not Deliverd</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="submit" className='bg-blue-800 hover:bg-blue-500' disabled={!isFormValid}>
-                            {selectedSupply ? 'Update' : 'Add'} Supply
+                        <Button
+                            type="submit"
+                            className="bg-blue-800 hover:bg-blue-500"
+                            disabled={!isFormValid || loading}
+                        >
+                            {loading ? (
+                                <Loader2 className="animate-spin" />
+                            ) : (
+                                `${selectedSupply ? 'Update' : 'Add'} Supply`
+                            )}
                         </Button>
+
                     </DialogFooter>
                 </form>
             </DialogContent>

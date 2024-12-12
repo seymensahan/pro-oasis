@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import CreateSupplierModal from './components/CreateSupplierModal'
+import useGetSupplier from './hooks/useGetSupplier'
 
 // Mock data for suppliers
 const allSuppliers = [
@@ -31,12 +32,13 @@ export default function SuppliersPage() {
         email: '',
         website: ''
     })
+    const { supplier } = useGetSupplier()
 
     const itemsPerPage = 4
     const indexOfLastItem = currentPage * itemsPerPage
     const indexOfFirstItem = indexOfLastItem - itemsPerPage
-    const currentSuppliers = allSuppliers.slice(indexOfFirstItem, indexOfLastItem)
-    const totalPages = Math.ceil(allSuppliers.length / itemsPerPage)
+    const currentSuppliers = supplier.slice(indexOfFirstItem, indexOfLastItem)
+    const totalPages = Math.ceil(supplier.length / itemsPerPage)
 
     const handleAddNew = () => {
         setFormData({
@@ -90,7 +92,7 @@ export default function SuppliersPage() {
                             <p><strong>Contact:</strong> {supplier.contact}</p>
                             <p className="flex items-center mt-2">
                                 <Phone className="h-4 w-4 mr-2" />
-                                {supplier.phone}
+                                {supplier.contact}
                             </p>
                             <p className="flex items-center mt-2">
                                 <Mail className="h-4 w-4 mr-2" />

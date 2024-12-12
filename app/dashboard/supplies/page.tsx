@@ -29,11 +29,12 @@ export default function SuppliesPage() {
         productName: '',
         quantityPurchased: '',
         supplier: '',
+        status: ''
     });
 
     const { supply } = SupplyComponent()
 
-    const itemsPerPage = 4;
+    const itemsPerPage = 8;
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentSupplies = supply.slice(indexOfFirstItem, indexOfLastItem);
@@ -41,13 +42,13 @@ export default function SuppliesPage() {
 
     const handleAddNew = () => {
         setSelectedSupply(null);
-        setFormData({ productName: '', quantityPurchased: '', supplier: '' });
+        setFormData({ productName: '', quantityPurchased: '', supplier: '', status: '' });
         setIsModalOpen(true);
     };
 
     const handleEdit = (supply: SupplyDataProps) => {
         setSelectedSupply(supply);
-        setFormData({ productName: supply.supplyProduct, category: supply.category, unit: supply.unit, quantityPurchased: supply.quantityPurchased, supplier: supply.supplier });
+        setFormData({ productName: supply.supplyProduct, category: supply.category, unit: supply.unit, quantityPurchased: supply.quantityPurchased, supplier: supply.supplier, status: supply.status || 'not delivered' });
         setIsModalOpen(true);
     };
 

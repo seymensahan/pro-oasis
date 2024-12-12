@@ -70,6 +70,10 @@ const useSupplyData = () => {
                             quantityPurchased: supplyData.quantityPurchased,
                             supplier: supplyData.supplier,
                             images: productData.images || [],
+                            createAt: supplyData.createAt,
+                            status: supplyData.status,
+                            grandTotal: supplyData.grandTotal,
+                            previousStock: supplyData.previousStock
                         };
                     })
                 );

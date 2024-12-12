@@ -1,3 +1,4 @@
+import { SaleProduct } from "@/app/dashboard/sales/types";
 import { User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 
@@ -45,7 +46,7 @@ export type ProductDataProps = {
     owner?: string;            // Owner ID (for multi-user systems, if relevant)
 }
 
-export interface SupplyDataProps {
+export interface SupplyDataProps  {
     id: string;
     supplyProduct: string;
     category: string;
@@ -54,7 +55,12 @@ export interface SupplyDataProps {
     quantityPurchased: string;
     supplier: string;
     images?: ImageProps[]; 
+    createAt: Timestamp
+    status?: string
+    grandTotal: number
+    previousStock: number
 }
+export type MovementType = SaleProduct | SupplyDataProps;
 
 export interface SupplierModalProps {
     id?: string;
@@ -74,6 +80,7 @@ export type FormData = {
     unit?: string;             // Unit of measurement for the supply item
     quantityPurchased: string ;  // Quantity of the product purchased
     supplier: string;          // Supplier name
+    status: string;
 };
 
 // Type for service data properties, capturing various service attributes

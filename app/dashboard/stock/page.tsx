@@ -80,7 +80,7 @@ export default function StockManagement() {
                     <h1 className="text-3xl font-bold">Gestion des Stocks</h1>
                     <p className="text-sm text-gray-600">Gérez et suivez votre inventaire</p>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 hidden">
                     <Button variant="outline" size="icon">
                         <FileText className="h-4 w-4 text-red-500" />
                     </Button>

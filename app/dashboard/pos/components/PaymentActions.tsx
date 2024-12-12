@@ -49,9 +49,7 @@ const PaymentActions = ({ cart, customer, onSaleComplete }: PaymentProps) => {
             customerName: customer,
             quantityOrdered: item.quantity,
             subtotal: item.price * item.quantity,
-            date: item.expirationDate
-                ? Timestamp.fromDate(new Date(item.expirationDate))
-                : null,
+            date: Timestamp.fromDate(new Date()),
             price: item.price,
             biller: user?.uid,
         })),
@@ -91,7 +89,7 @@ const PaymentActions = ({ cart, customer, onSaleComplete }: PaymentProps) => {
                     {loading ? <><Loader2 className='animate-spin' /> Processing...</> : 'Confirm Payment'}
                 </Button>
             </div>
-            <SalesConfirmationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <SalesConfirmationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} invoice={saleData} />
         </div>
     );
 };

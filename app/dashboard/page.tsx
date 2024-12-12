@@ -40,9 +40,6 @@ const bestSellers = [
 ]
 
 const stats = [
-    { title: "Total Revenue", amount: 12231, progress: "+20.1% from last month", icon: DollarSign },
-    { title: "New Customers", amount: 2345, progress: "+15.3% from last month", icon: Users },
-    { title: "Total Orders", amount: 5678, progress: "+12.7% from last month", icon: ShoppingCart },
     { title: "Total Sales", amount: 21456, progress: "+18.2% from last month", icon: ArrowUpRight },
 ]
 
@@ -63,9 +60,54 @@ export default function Dashboard() {
                 <div className="px-4 py-6 sm:px-0">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome back, {user?.displayName}</h1>
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                        {stats.map((stat, index) => (
-                            <DashboardStats title={stat.title} amount={stat.amount} progress={stat.progress} icon={<stat.icon />} />
-                        ))}
+                        <div>
+                            <Card className="bg-gradient-to-br from-blue-400 to-blue-500 text-white">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                                    <div className="h-4 w-4 text-purple-100"><DollarSign /></div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">12231 FCFA</div>
+                                    <p className="text-xs text-purple-100">+20.1% from last month</p>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div>
+                            <Card className="bg-gradient-to-br from-blue-400 to-blue-500 text-white">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">New Customers</CardTitle>
+                                    <div className="h-4 w-4 text-purple-100"><Users /></div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">2345 FCFA</div>
+                                    <p className="text-xs text-purple-100">+15.3% from last month</p>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div>
+                            <Card className="bg-gradient-to-br from-blue-400 to-blue-500 text-white">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+                                    <div className="h-4 w-4 text-purple-100"><ShoppingCart /></div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">5678 FCFA</div>
+                                    <p className="text-xs text-purple-100">+12.7% from last month</p>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div>
+                            <Card className="bg-gradient-to-br from-blue-400 to-blue-500 text-white">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+                                    <div className="h-4 w-4 text-purple-100"><ArrowUpRight /></div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">21456 FCFA</div>
+                                    <p className="text-xs text-purple-100">18.2% from last month</p>
+                                </CardContent>
+                            </Card>
+                        </div>
 
                     </div>
 

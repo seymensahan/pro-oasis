@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             await signInWithEmailAndPassword(auth, email, password);
             router.push("/dashboard"); // Redirect after successful login
         } catch (error: any) {
-            console.error("Login failed:", error.message);
+            alert(`Login failed: ${error.message}`);
             throw error;
         } finally {
             setLoading(false);

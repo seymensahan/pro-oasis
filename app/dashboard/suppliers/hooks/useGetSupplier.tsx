@@ -11,7 +11,7 @@ const useGetSupplier = () => {
 
 
     const supplierQuery = user
-        ? query(collection(firestore, 'supplier'), where('owner', '==', user.uid))
+        ? query(collection(firestore, 'suppliers'), where('store', '==', user.uid))
         : null;
 
     // Use `useCollection` to access document snapshots and IDs

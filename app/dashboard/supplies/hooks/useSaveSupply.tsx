@@ -13,12 +13,6 @@ const useSaveSupply = () => {
 
     const [supplySaveLoading, setSupplySaveLoading] = useState(false)
 
-
-
-
-
-
-
     const saveSupply = async (supplyData: FormData) => {
         setSupplySaveLoading(true);
         // setError(null);
@@ -32,27 +26,24 @@ const useSaveSupply = () => {
 
             // await getProductByName(supplyData.productName)
 
-            const supplyDoc = {
-                ...supplyData,
-                buyer: user?.uid,
-                reference: supplyReference,
-                createAt: serverTimestamp(),
-            }
-
+            
             const productRef = collection(firestore, "products");
             const q = query(productRef, where("name", "==", supplyData.productName));
-
+            
             // Get the current product data to check and update quantity
             const productSnapshot = await getDocs(q);
-
+            
             if (productSnapshot.empty) {
                 toast.error(`Product ${supplyData.productName} not found in inventory`);
                 return
             }
-
+            
             const productDoc = productSnapshot.docs[0];
             const currentQuantity = productDoc.data().stock;
 
+            const productPrice = productDoc.data().purchasePrice
+            const total = Number(supplyData.quantityPurchased) * productPrice
+            
             // if (currentQuantity < supplyData.quantityPurchased) {
             //     toast.error(`Insufficient quantity for product ${supplyData.productName}`);
             //     return
@@ -65,7 +56,15 @@ const useSaveSupply = () => {
             await updateDoc(productDocRef, {
                 stock: updatedQuantity,
             });
-
+            
+            const supplyDoc = {
+                ...supplyData,
+                grandTotal: total,
+                previousStock: currentQuantity,
+                buyer: user?.uid,
+                reference: supplyReference,
+                createAt: serverTimestamp(),
+            }
             await setDoc(newSupply, supplyDoc)
             toast.success("Supply initiated successfully")
 

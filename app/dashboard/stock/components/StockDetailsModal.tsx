@@ -1,5 +1,5 @@
 import { ModalProps, ProductDataProps } from '@/lib/Types'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -11,13 +11,52 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import getProductSales from '../hooks/useProductSales'
+import formatDate from '@/lib/FormatDate'
+import useProductSales from '../hooks/useProductSales'
+import useProductPurchases from '../hooks/useProductPurchases'
+import { SaleData } from '../../sales/types'
+import { Timestamp } from 'firebase/firestore'
+import useFetchRessources from '../hooks/useFetchRessources'
+
+type JoinType = {
+    date?: Timestamp | Date | string;
+    createAt?: Timestamp | Date | string;
+    previousStock?: number;
+    quantityPurchased?: number;
+    grandTotal?: number;
+    quantityOrdered?: number;
+    subtotal?: number;
+};
 
 
 interface StockModalProps extends ModalProps {
     products: ProductDataProps | null
+
 }
 
+
+
 const StockDetailsModal = ({ isOpen, onClose, products }: StockModalProps) => {
+    const { sales, getSalesByProductName } = useProductSales();
+    const { purchase, getPurchaseByProductName } = useProductPurchases()
+    const { fetchCollectionA, fetchCollectionB } = useFetchRessources()
+
+    useEffect(() => {
+        if (products?.name) {
+            console.log("Fetching sales for product:", products.name);
+            getSalesByProductName(products.name).then((allSales) => {
+                console.log("Fetched sales:", allSales);
+            });
+
+            getPurchaseByProductName(products.name).then((allSales) => {
+                console.log("Fetched sales:", allSales);
+            });
+        }
+    }, [products?.name]);
+
+    
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
@@ -69,7 +108,7 @@ const StockDetailsModal = ({ isOpen, onClose, products }: StockModalProps) => {
                                             <TableHeader>
                                                 <TableRow>
                                                     <TableHead>Date</TableHead>
-                                                    <TableHead>Reference</TableHead>
+                                                    <TableHead>Initial Stock</TableHead>
                                                     <TableHead>Type</TableHead>
                                                     <TableHead>Entries Qty</TableHead>
                                                     <TableHead>Entries Amount</TableHead>
@@ -77,27 +116,47 @@ const StockDetailsModal = ({ isOpen, onClose, products }: StockModalProps) => {
                                                     <TableHead>Outflows Amount</TableHead>
                                                     <TableHead>Damage Qty</TableHead>
                                                     <TableHead>Damage Amount</TableHead>
-                                                    <TableHead>Total</TableHead>
+                                                    <TableHead>Total Quantity</TableHead>
+                                                    <TableHead>Total Amount</TableHead>
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
-                                                {/* {stockMovements.map((movement, index) => (
-                                                    <TableRow key={index}>
-                                                        <TableCell>{movement.date}</TableCell>
-                                                        <TableCell>{movement.reference}</TableCell>
-                                                        <TableCell>{movement.description}</TableCell>
-                                                        <TableCell>{movement.entryQty}</TableCell>
-
-                                                        <TableCell>{movement.entryAmount.toLocaleString()}</TableCell>
-                                                        <TableCell>{movement.exitQty}</TableCell>
-                                                        <TableCell>{movement.exitAmount.toLocaleString()}</TableCell>
-                                                        <TableCell>{movement.damageQty}</TableCell>
-                                                        <TableCell>{movement.damageAmount.toLocaleString()}</TableCell>
-                                                        <TableCell>{movement.balance}</TableCell>
-                                                    </TableRow>
-                                                ))} */}
+                                                <TableRow>
+                                                    <TableCell>Date</TableCell>
+                                                </TableRow>
                                             </TableBody>
                                         </Table>
+                                        <div>
+                                            <h1>Filtered Data</h1>
+                                            <div>
+                                                <label>
+                                                    Start Date:
+                                                    <input
+                                                        type="date"
+                                                        value={startDate}
+                                                        onChange={(e) => setStartDate(e.target.value)}
+                                                    />
+                                                </label>
+                                                <label>
+                                                    End Date:
+                                                    <input
+                                                        type="date"
+                                                        value={endDate}
+                                                        onChange={(e) => setEndDate(e.target.value)}
+                                                    />
+                                                </label>
+                                                <button onClick={handleFilter}>Filter</button>
+                                            </div>
+                                            <ul>
+                                                {data.map(item => (
+                                                    <li key={item.id}>
+                                                        <strong>{item.type === "A" ? "Collection A" : "Collection B"}</strong>
+                                                        - {item.name || item.title}
+                                                        - Created At: {item.createdAt?.toLocaleString()}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     </CardContent>
                                 </Card>
                             </TabsContent>
