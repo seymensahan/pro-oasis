@@ -14,7 +14,7 @@ import { ServiceTable } from './components/ServiceTable';
 export default function Page() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [sortBy, setSortBy] = useState<string>('name'); // Default sort by 'name'
+    const [sortBy, setSortBy] = useState<string>('name');
     const itemsPerPage = 10;
     const { services, loading, error } = useGetService()
 
