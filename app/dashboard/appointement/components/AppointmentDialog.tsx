@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Appointment, COLORS } from '../types'
 import { cn } from "@/lib/utils"
 import useGetService from '../../services/hooks/useGetService'
+import useAppointement from '../hooks/useAppointement'
 
 interface AppointmentDialogProps {
     isOpen: boolean
@@ -34,12 +35,14 @@ export function AppointmentDialog({
 }: AppointmentDialogProps) {
     const [localAppointment, setLocalAppointment] = React.useState<Partial<Appointment>>(appointment)
     const { services, loading, error } = useGetService()
+    const { saveLoading } = useAppointement()
 
     React.useEffect(() => {
         setLocalAppointment(appointment)
     }, [appointment])
 
     const handleSave = () => {
+        console.log("Clicked with: ", localAppointment)
         onSave(localAppointment)
     }
 
@@ -163,7 +166,7 @@ export function AppointmentDialog({
                     <Button variant="outline" onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSave} >
+                    <Button onClick={handleSave} disabled={!!saveLoading} >
                         {isEditing ? 'Update' : 'Save'}
                     </Button>
                 </DialogFooter>

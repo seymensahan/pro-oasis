@@ -34,10 +34,11 @@ export default function CalendarPage() {
     }
 
     const handleCreateOrUpdateAppointment = (appointment: Partial<Appointment>) => {
-        if (appointment.title && appointment.date && appointment.time) {
+        if (appointment.service && appointment.date && appointment.time) {
             if (editingAppointment) {
                 updateAppointement(appointment as Appointment)
             } else {
+                console.log("Saving with: ", appointment)
                 saveAppointement(appointment as Appointment)
             }
             setIsDialogOpen(false)

@@ -127,7 +127,7 @@ export default function ServiceForm({ onSubmit }: FormSubmitProps) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="service-price">Price *</Label>
+                            <Label htmlFor="service-price">Price</Label>
                             <Input
                                 id="service-price"
                                 type="number"
@@ -142,7 +142,7 @@ export default function ServiceForm({ onSubmit }: FormSubmitProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="service-duration">Duration (hours) *</Label>
+                            <Label htmlFor="service-duration">Duration (hours)</Label>
                             <Input
                                 id="service-duration"
                                 type="number"
@@ -154,7 +154,7 @@ export default function ServiceForm({ onSubmit }: FormSubmitProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="service-availability">Availability *</Label>
+                            <Label htmlFor="service-availability">Availability</Label>
                             <Select name="availability" onValueChange={handleSelectChange('availability')} required>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select availability" />
@@ -169,7 +169,7 @@ export default function ServiceForm({ onSubmit }: FormSubmitProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="service-delivery-method">Delivery Method *</Label>
+                        <Label htmlFor="service-delivery-method">Delivery Method</Label>
                         <Select name="deliveryMethod" onValueChange={handleSelectChange('deliveryMethod')} required>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select delivery method" />

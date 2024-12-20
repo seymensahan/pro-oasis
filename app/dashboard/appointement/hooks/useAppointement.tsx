@@ -44,7 +44,7 @@ const useAppointement = () => {
 
     const saveAppointement = async (appointment: Appointment) => {
         const appointementSaveData = {
-            service: appointment.title,
+            service: appointment.service,
             date: appointment.date,
             time: appointment.time,
             description: appointment.description || "",
@@ -82,7 +82,7 @@ const useAppointement = () => {
             const appointmentRef = doc(firestore, "appointements", appointment.id);
 
             await updateDoc(appointmentRef, {
-                service: appointment.title,
+                service: appointment.service,
                 date: appointment.date,
                 time: appointment.time,
                 description: appointment.description || "",
