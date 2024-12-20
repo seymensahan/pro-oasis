@@ -34,7 +34,7 @@ export function DeleteConfirmationDialog({
                     <AlertDialogCancel onClick={onClose}>
                         Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={onConfirm}>
+                    <AlertDialogAction className="bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90" onClick={onConfirm}>
                         Delete
                     </AlertDialogAction>
                 </AlertDialogFooter>

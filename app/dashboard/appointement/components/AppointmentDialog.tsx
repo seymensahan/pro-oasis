@@ -59,9 +59,9 @@ export function AppointmentDialog({
                         <select
                             id="title"
                             className="rounded-lg border px-3 py-2"
-                            value={localAppointment.title || ''}
+                            value={localAppointment.service || ''}
                             onChange={(e) =>
-                                setLocalAppointment((prev) => ({ ...prev, title: e.target.value }))
+                                setLocalAppointment((prev) => ({ ...prev, service: e.target.value }))
                             }
                         >
                             <option value="" disabled>
@@ -163,7 +163,7 @@ export function AppointmentDialog({
                     <Button variant="outline" onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSave}>
+                    <Button onClick={handleSave} >
                         {isEditing ? 'Update' : 'Save'}
                     </Button>
                 </DialogFooter>

@@ -59,7 +59,7 @@ export function WeekView({
                                         </button>
                                     </div>
                                 </div>
-                                <div>{appointment.title}</div>
+                                <div>{appointment.service}</div>
                             </div>
                         ))}
                     </div>
