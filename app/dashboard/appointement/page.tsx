@@ -18,12 +18,12 @@ export default function CalendarPage() {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
     const [view, setView] = React.useState<'month' | 'week'>('month')
     // const { appointements } = useAppointement()
-    const [appointments, setAppointments] = React.useState<Appointment[]>([
+    // const [appointments, setAppointments] = React.useState<Appointment[]>([
         
-    ])
+    // ])
     const [editingAppointment, setEditingAppointment] = React.useState<string | null>(null)
     const [appointmentToDelete, setAppointmentToDelete] = React.useState<string | null>(null)
-    const { saveAppointement, saveLoading, saveError } = useAppointement()
+    const { saveAppointement, saveLoading, saveError, appointments } = useAppointement()
 
     const handlePreviousMonth = () => setCurrentDate(subMonths(currentDate, 1))
     const handleNextMonth = () => setCurrentDate(addMonths(currentDate, 1))
@@ -56,9 +56,11 @@ export default function CalendarPage() {
         setIsDeleteDialogOpen(true)
     }
 
+console.log("ppointements: ", appointments)
+
     const confirmDeleteAppointment = () => {
         if (appointmentToDelete) {
-            setAppointments(prev => prev.filter(app => app.id !== appointmentToDelete))
+            // setAppointments(prev => prev.filter(app => app.id !== appointmentToDelete))
             setIsDeleteDialogOpen(false)
             setAppointmentToDelete(null)
         }

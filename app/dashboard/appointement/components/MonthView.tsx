@@ -63,7 +63,7 @@ export function MonthView({
                                     appointment.color
                                 )}
                             >
-                                <span>{appointment.time} {appointment.title}</span>
+                                <span>{appointment?.time} {appointment?.service}</span>
                                 <div className="flex space-x-1">
                                     <button onClick={(e) => { e.stopPropagation(); onEditAppointment(appointment); }}>
                                         <Edit className="w-3 h-3" />

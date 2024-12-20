@@ -21,20 +21,19 @@ export function AppointmentList({
             <h3 className="font-semibold mb-4">Upcoming Appointments</h3>
             <div className="space-y-4">
                 {appointments
-                    // .sort((a, b) => a.date?.getTime() - b.date?.getTime())
+                    .sort((a, b) => a.date?.getTime() - b.date?.getTime())
                     .slice(0, 5)
                     .map((appointment) => (
                         <div key={appointment.id} className="flex items-start gap-3">
                             <Avatar className={cn('w-8 h-8', appointment.color)}>
                                 <AvatarFallback className="text-black">
-                                    {appointment?.title[0]}
+                                    {appointment?.service?.[0]}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="flex-grow">
-                                <div className="font-medium">{appointment?.title}</div>
+                                <div className="font-medium">{appointment?.service}</div>
                                 <div className="text-sm text-gray-500">
-                                    {format(appointment?.date, 'MMM d, yyyy')} at {appointment?.time}
-                                </div>
+                                    {appointment?.date ? format(appointment.date, 'MMM d, yyyy') : 'Invalid Date'} at {appointment?.time}                                </div>
                                 {appointment?.reminder && (
                                     <div className="text-xs text-gray-500 flex items-center gap-1 mt-1">
                                         <Bell className="w-3 h-3" /> Reminder set

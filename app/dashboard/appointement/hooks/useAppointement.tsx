@@ -9,7 +9,7 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 const useAppointement = () => {
     const [saveLoading, setSaveLoading] = useState(false)
     const [saveError, setSaveError] = useState(null)
-    const [appointements, setAppointements] = useState<Appointment[]>([])
+    const [appointments, setAppointements] = useState<Appointment[]>([])
 
     const { user } = useAuth()
 
@@ -23,8 +23,8 @@ const useAppointement = () => {
         if (appointementSnapShots && !loading) {
             const fetchedAppointements = appointementSnapShots.docs.map(doc => ({
                 id: doc.id,
+                ...doc.data(),
                 date: doc.data().date.toDate(),
-                ...doc.data()
             })) 
             setAppointements(fetchedAppointements as Appointment[])
         }
@@ -59,7 +59,7 @@ const useAppointement = () => {
 
     }
 
-    return { saveAppointement, appointements, saveLoading, saveError }
+    return { saveAppointement, appointments, saveLoading, saveError }
 }
 
 export default useAppointement

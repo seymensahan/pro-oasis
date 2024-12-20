@@ -3,6 +3,7 @@ import { Timestamp } from "firebase/firestore"
 export interface Appointment {
     id: string
     title: string
+    service?: string
     date: Date
     time: string
     description: string
