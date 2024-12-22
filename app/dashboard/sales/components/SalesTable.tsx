@@ -83,7 +83,7 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 </TableCell>
                                 <TableCell className="font-medium">{sale.customerName}</TableCell>
                                 <TableCell>{sale.saleReference}</TableCell>
-                                <TableCell>{formatDate(sale.date)}</TableCell>
+                                <TableCell>{formatDate(sale.date as Timestamp)}</TableCell>
                                 <TableCell>{sale.productName}</TableCell>
                                 <TableCell>{sale.quantityOrdered}</TableCell>
                                 <TableCell>{ sale.subtotal / sale.quantityOrdered } FCFA</TableCell>
